@@ -1,30 +1,68 @@
 const helper = require('puppeteer/lib/helper');
 const ElementHandle = require('puppeteer/lib/ElementHandle');
 
-async function newPage(browser) {
-    const page = await browser.newPage();
-    
-    page.clickOn = async (identifier) => {
-        const element = await identifier(page);
-        return element ? element.click() : null;
+class Page {
+    constructor(source) {
+        this.source = source;
     }
 
-    page.exists = async (selector) => {
-        if (typeof selector == 'string') return !!(await page.$(selector));
-        const element = await selector(page);
-        return element != null;
+    static async create(browser) {
+        return new Page(await browser.newPage());
     }
 
-    return page;
+    async goto(url, options) {
+        return await this.source.goto(url, options);
+    }
+
+    url() {
+        return this.source.url();
+    }
+
+    async click(selector, waitForNavigation = true) {
+        return await this._click(selector, {}, waitForNavigation);
+    }
+
+    async doubleClick(selector, waitForPageToLoad = true) {
+        return await this._click(selector, {
+            clickCount: 2
+        }, waitForPageToLoad)
+    }
+
+    async exists(selector) {
+        return (await xpath(this.source, getSelector(selector))) != null;
+    }
+
+    async write(text, options) {
+        return this.source.type(text, options);
+    }
+
+    async press(key, options) {
+        return this.source.press(key, options);
+    }
+
+    async _click(selector, options = {}, wait = true) {
+        const element = await xpath(this.source, getSelector(selector));
+        if (!element) return null
+        const result = await element.click(options)
+        return wait ? await this.source.waitForNavigation() : result;
+    }
 }
 
-const by = {
-    text: (selector) => async (page) => await xpath(page, `//*[text()="${selector}"]`),
-    containsText: (selector) => async (page) => await xpath(page, `//*[contains(text(),"${selector}")]`),
-    xpath: (selector) => async (page) => await xpath(page, selector)
-};
+class Selector {
+    constructor(selector) {
+        this.identifier = selector;
+    }
 
-const xpath = async (page, selector) => {
+    selector() {
+        return this.identifier;
+    }
+}
+
+const getSelector = (selector) => (selector instanceof Selector ? selector : text(selector)).selector();
+
+const isString = (obj) => typeof obj == 'string' || obj instanceof String;
+
+const xpath = async(page, selector) => {
     const remoteObject = await page._frameManager.mainFrame()._rawEvaluate(selector => {
         let node, results = [];
         let result = document.evaluate(selector, document, null, XPathResult.ANY_TYPE, null);
@@ -49,7 +87,32 @@ const xpath = async (page, selector) => {
     return result.length > 0 ? result[0] : null;
 }
 
+const assertType = (obj, condition = isString, message = "String parameter expected") => {
+    if (!condition(obj)) throw new Error(message);
+}
+
+const text = (selector) => {
+    assertType(selector);
+    return new Selector(`//*[text()="${selector}"]`);
+}
+
+const dummy = (e) => e;
+
 module.exports = {
-    newPage: newPage,
-    by: by
+    Page: Page,
+    text: text,
+    into: dummy,
+    to: dummy,
+    containsText: (selector) => {
+        assertType(selector);
+        return new Selector(`//*[contains(text(),"${selector}")]`);
+    },
+    xpath: (selector) => {
+        assertType(selector);
+        return new Selector(selector);
+    },
+    link: (selector) => {
+        assertType(selector, (obj) => obj instanceof Selector || isString(obj), "Selector or String parameter expected");
+        return new Selector(getSelector(selector).replace("*", "a"));
+    },
 };
