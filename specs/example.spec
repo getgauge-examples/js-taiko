@@ -7,12 +7,21 @@ To execute this specification, use
 
 * Navigate to Gauge homepage "https://getgauge.io"
 
+Logo
+----
+* Display the Gauge logo
+
 Get Started
 -----------
-* Go to Gauge Get Started Page
+* Go to Gauge get started page
 * Display the sub title "Choose your OS & download" 
 
 Documentation
 -------------
-* Go to Gauge Documentation Page
+* Go to Gauge documentation page
 * Display the Gauge version
+
+Plugins
+-------
+* Go to plugins page
+* Display the official plugins

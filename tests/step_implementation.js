@@ -4,10 +4,12 @@ const puppeteer = require('puppeteer');
 const assert = require("assert");
 const {
     Page,
-    containsText,
+    contains,
     xpath,
     link,
-    text
+    text,
+    listItem,
+    image
 } = require("./helper");
 
 let page, browser;
@@ -30,7 +32,11 @@ step("Navigate to Gauge homepage <query>", async function (query) {
     await page.goto(query);
 });
 
-step("Go to Gauge Get Started Page", async function () {
+step("Display the Gauge logo", async function() {
+    assert.ok(await page.exists(image("Gauge logo"))); // Checking if the image with alt exists on page
+});
+
+step("Go to Gauge get started page", async function() {
     // Assuming you are on the page
     // Prefer without selectos only qualify as link when there are more than one elements.
     // await _click("Get Started"); 
@@ -44,7 +50,7 @@ step("Display the sub title <title>", async function (title) {
     assert.ok(await page.exists(title)); // Checking if the element with the text exists on page
 });
 
-step("Go to Gauge Documentation Page", async function () {
+step("Go to Gauge documentation page", async function() {
     // Remove this, not required at the moment.
     // there will be a wild card selector
     // either $() or _$("//blah") will assume it is an xpath becuase there is a //
@@ -58,15 +64,26 @@ step("Display the Gauge version", async function () {
     // Link existence
     // assert.ok(await link("Quick start").exists());
     assert.ok(await page.exists(link("Quick start"))); // Checking if a link with the text exists on page
-    // Don't implement containsText, need a better api
-
-    assert.ok(await page.exists(link(containsText("Quick")))); // Checking if a link containing the text exists on page
+    assert.ok(await page.exists(link(contains("Quick")))); // Checking if a link containing the text exists on page
 
     // Text existence
     assert.ok(await page.exists("Welcome")); // Checking if any element with the text exists on page
     assert.ok(await page.exists(text("Welcome"))); // Checking if any element with the text exists on page
+    assert.ok(await page.exists(contains("come"))); // Checking if any element with the text exists on page
+    assert.ok(await page.exists(contains("0.9.3"))); // Checking if the element containing the text exists on page
+});
 
-    assert.ok(await page.exists(containsText("come"))); // Checking if any element with the text exists on page
+step("Go to plugins page", async function() {
+    await page.hover(link("Get Started")); // Hover on a link by text
+    await page.click(link("Plugins")); // click on a link by text
+});
 
-    assert.ok(await page.exists(containsText("0.9.3"))); // Checking if the element containing the text exists on page
+step("Display the official plugins", async function() {
+    assert.ok(await page.exists("Gauge Plugins")); // Checking if the element with the text exists on page
+
+    // Checking if the li containing the text exists on page
+    assert.ok(await page.exists(listItem(contains("Java runner"))));
+    assert.ok(await page.exists(listItem(contains("C# runner"))));
+    assert.ok(await page.exists(listItem(contains("Ruby runner"))));
+    assert.ok(await page.exists(listItem(contains("Java runner"))));
 });

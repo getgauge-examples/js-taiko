@@ -29,7 +29,7 @@ class Page {
     }
 
     async exists(selector) {
-        return (await xpath(this.source, getSelector(selector))) != null;
+        return (await this._getElement(selector)) != null;
     }
 
     async write(text, options) {
@@ -40,15 +40,26 @@ class Page {
         return this.source.press(key, options);
     }
 
+    async hover(selector) {
+        const element = await this._getElement(selector);
+        if (!element) return null
+        await element.hover();
+        await element.dispose();
+    }
+
     async _click(selector, options = {}, wait = true) {
-        const element = await xpath(this.source, getSelector(selector));
+        const element = await this._getElement(selector);
         if (!element) return null
         const result = await element.click(options)
         return wait ? await this.source.waitForNavigation() : result;
     }
+
+    async _getElement(selector) {
+        return await (selector instanceof CssSelectorToElement ? this.source.$(selector.selector()) : xpath(this.source, getSelector(selector)));
+    }
 }
 
-class Selector {
+class Converter {
     constructor(selector) {
         this.identifier = selector;
     }
@@ -58,7 +69,30 @@ class Selector {
     }
 }
 
-const getSelector = (selector) => (selector instanceof Selector ? selector : text(selector)).selector();
+class StringToSelector extends Converter {
+    static create(selector) {
+        assertType(selector);
+        return new StringToSelector(selector);
+    }
+}
+
+class SelectorToElement extends Converter {
+    static create(selector) {
+        assertType(selector,
+            (obj) => obj instanceof StringToSelector || isString(obj),
+            "String Selector or String parameter expected");
+        return new SelectorToElement(selector);
+    }
+}
+
+class CssSelectorToElement extends Converter {
+    static create(selector) {
+        assertType(selector, isString, "String parameter expected");
+        return new CssSelectorToElement(selector);
+    }
+}
+
+const getSelector = (selector) => (selector instanceof Converter ? selector : text(selector)).selector();
 
 const isString = (obj) => typeof obj == 'string' || obj instanceof String;
 
@@ -93,7 +127,7 @@ const assertType = (obj, condition = isString, message = "String parameter expec
 
 const text = (selector) => {
     assertType(selector);
-    return new Selector(`//*[text()="${selector}"]`);
+    return new StringToSelector(`//*[text()="${selector}"]`);
 }
 
 const dummy = (e) => e;
@@ -103,16 +137,10 @@ module.exports = {
     text: text,
     into: dummy,
     to: dummy,
-    containsText: (selector) => {
-        assertType(selector);
-        return new Selector(`//*[contains(text(),"${selector}")]`);
-    },
-    xpath: (selector) => {
-        assertType(selector);
-        return new Selector(selector);
-    },
-    link: (selector) => {
-        assertType(selector, (obj) => obj instanceof Selector || isString(obj), "Selector or String parameter expected");
-        return new Selector(getSelector(selector).replace("*", "a"));
-    },
+    contains: (selector) => StringToSelector.create(`//*[contains(.,"${selector}")]`),
+    xpath: (selector) => StringToSelector.create(selector),
+    link: (selector) => SelectorToElement.create(getSelector(selector).replace("*", "a")),
+    listItem: (selector) => SelectorToElement.create(getSelector(selector).replace("*", "li")),
+    button: (selector) => SelectorToElement.create(getSelector(selector).replace("*", "button")),
+    image: (selector) => CssSelectorToElement.create(`img[alt="${selector}"]`),
 };
