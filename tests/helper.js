@@ -9,14 +9,14 @@ const openBrowser = async(options) => {
     page = await browser.newPage();
 }
 
-const closeBrowser = async(options) => await browser.close();
+const closeBrowser = async(options) => browser.close();
 
-const goto = async(url, options) => await page.goto(url, options);
+const goto = async(url, options) => page.goto(url, options);
 
 const click = async(selector, options = {}, waitForNavigation = true) => {
     const element = await getElement(selector);
     if (!element) return;
-    const result = await element.click(options);
+    await element.click(options);
     await element.dispose();
     if (waitForNavigation) await page.waitForNavigation();
 }
@@ -45,7 +45,7 @@ const write = async(text, into) => {
 }
 
 const press = async(key, options) => {
-    await page.press("", { text: String.fromCharCode(key), delay: 0 });
+    await page.press('', { text: String.fromCharCode(key), delay: 0 });
 }
 
 const waitUntil = async(condition, options = { intervalTime: 1000, timeout: 10000 }) => {
@@ -63,57 +63,57 @@ const waitUntil = async(condition, options = { intervalTime: 1000, timeout: 1000
 }
 
 const $ = (selector) => {
-    const get = async() => await (selector.startsWith("//") ? xpath(selector) : page.$(selector));
+    const get = async() => selector.startsWith('//') ? xpath(selector) : page.$(selector);
     return { get: get, exists: exists(get), };
 }
 
 const image = (selector) => {
     assertType(selector);
-    const get = async() => await page.$(`img[alt="${selector}"]`);
+    const get = async() => page.$(`img[alt='${selector}']`);
     return { get: get, exists: exists(get), };
 }
 
 const link = (selector) => {
-    const get = async() => await getElementByTag(selector, "a");
+    const get = async() => getElementByTag(selector, 'a');
     return { get: get, exists: exists(get), };
 }
 
 const listItem = (selector) => {
-    const get = async() => await getElementByTag(selector, "li");
+    const get = async() => getElementByTag(selector, 'li');
     return { get: get, exists: exists(get), };
 }
 
-const textField = (selector, attribute = "placeholder") => {
+const textField = (selector, attribute = 'placeholder') => {
     assertType(selector);
-    const get = async() => await page.$(`input[${attribute}="${selector}"]`);
-    return { get: get, exists: exists(get), value: async() => await page.evaluate(e => e.value, await get()) }
+    const get = async() => page.$(`input[${attribute}='${selector}']`);
+    return { get: get, exists: exists(get), value: async() => page.evaluate(e => e.value, await get()) }
 }
 
 const text = (text) => {
     assertType(text);
-    const get = async(element = "*") => await xpath(`//*[text()="${text}"]`.replace("*", element));
+    const get = async(element = '*') => xpath(`//*[text()='${text}']`.replace('*', element));
     return { get: get, exists: exists(get), };
 }
 
 const contains = (text) => {
     assertType(text);
-    const get = async(element = "*") => await xpath(`//*[contains(.,"${text}")]`.replace("*", element));
+    const get = async(element = '*') => xpath(`//*[contains(.,'${text}')]`.replace('*', element));
     return { get: get, exists: exists(get), };
 }
 
 const getElement = async(selector) => {
-    if (isString(selector)) return await text(selector).get();
-    else if (isSelector(selector)) return await selector.get();
+    if (isString(selector)) return text(selector).get();
+    else if (isSelector(selector)) return selector.get();
     return null;
 }
 
 const getElementByTag = async(selector, tag) => {
-    if (isString(selector)) return await text(selector).get(tag);
+    if (isString(selector)) return text(selector).get(tag);
     else if (isSelector(selector)) return selector.get(tag);
     return null;
 }
 
-const isString = (obj) => typeof obj == 'string' || obj instanceof String;
+const isString = (obj) => typeof obj === 'string' || obj instanceof String;
 
 const isSelector = (obj) => obj['get'] && obj['exists'];
 
@@ -143,7 +143,7 @@ const xpath = async(selector) => {
     return result.length > 0 ? result[0] : null;
 }
 
-const assertType = (obj, condition = isString, message = "String parameter expected") => {
+const assertType = (obj, condition = isString, message = 'String parameter expected') => {
     if (!condition(obj)) throw new Error(message);
 }
 
