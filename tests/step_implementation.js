@@ -1,89 +1,54 @@
 /* globals gauge*/
 "use strict";
-const puppeteer = require('puppeteer');
 const assert = require("assert");
-const {
-    Page,
-    contains,
-    xpath,
-    link,
-    text,
-    listItem,
-    image
-} = require("./helper");
+const { goto, openBrowser, closeBrowser, image, click, doubleClick, write, press, text, $, contains, hover, into, to, link, listItem, waitUntil, keys } = require("./helper");
 
-let page, browser;
+beforeSuite(async() => await openBrowser());
 
-beforeSuite(async function () {
-    // TODO: Puppeteer behind the scenes
-    // _openBrowser();
-    browser = await puppeteer.launch();
-    page = await Page.create(browser); // browser.newPage()
-});
+afterSuite(async() => await closeBrowser());
 
-afterSuite(async function () {
-    browser.close();
-//    _closeBrowser();
-});
-
-step("Navigate to Gauge homepage <query>", async function (query) {
-    // The API does not deal with pages
-    // await _goto(query);
-    await page.goto(query);
+step("Navigate to Gauge homepage <query>", async function(query) {
+    await goto(query);
 });
 
 step("Display the Gauge logo", async function() {
-    assert.ok(await page.exists(image("Gauge logo"))); // Checking if the image with alt exists on page
+    assert.ok(await image("Gauge logo").exists());
 });
 
 step("Go to Gauge get started page", async function() {
-    // Assuming you are on the page
-    // Prefer without selectos only qualify as link when there are more than one elements.
-    // await _click("Get Started"); 
-    await page.click(link("Get Started")); // finding the element by text
-    // OR await page.click("Get Started");
+    await click("Get Started");
 });
 
-step("Display the sub title <title>", async function (title) {
-    // Make this
-    // assert.ok(_text(title).exists());
-    assert.ok(await page.exists(title)); // Checking if the element with the text exists on page
+step("Display the sub title <title>", async function(title) {
+    assert.ok(await text(title).exists());
 });
 
 step("Go to Gauge documentation page", async function() {
-    // Remove this, not required at the moment.
-    // there will be a wild card selector
-    // either $() or _$("//blah") will assume it is an xpath becuase there is a //
-    // _$('#') else any text will be a css selector.
-    // example
-    // await _click(_$(`//*[text()="Documentation"]`));
-    await page.click(xpath(`//*[text()="Documentation"]`)); // finding the element by xpath
+    await click($(`//*[text()="Documentation"]`));
 });
 
-step("Display the Gauge version", async function () {
-    // Link existence
-    // assert.ok(await link("Quick start").exists());
-    assert.ok(await page.exists(link("Quick start"))); // Checking if a link with the text exists on page
-    assert.ok(await page.exists(link(contains("Quick")))); // Checking if a link containing the text exists on page
-
-    // Text existence
-    assert.ok(await page.exists("Welcome")); // Checking if any element with the text exists on page
-    assert.ok(await page.exists(text("Welcome"))); // Checking if any element with the text exists on page
-    assert.ok(await page.exists(contains("come"))); // Checking if any element with the text exists on page
-    assert.ok(await page.exists(contains("0.9.3"))); // Checking if the element containing the text exists on page
+step("Display the Gauge version", async function() {
+    assert.ok(await contains("0.9.3").exists());
 });
 
 step("Go to plugins page", async function() {
-    await page.hover(link("Get Started")); // Hover on a link by text
-    await page.click(link("Plugins")); // click on a link by text
+    await hover("Get Started");
+    await click("Plugins");
 });
 
 step("Display the official plugins", async function() {
-    assert.ok(await page.exists("Gauge Plugins")); // Checking if the element with the text exists on page
+    assert.ok(await link("Get Started").exists());
+    assert.ok(await link(contains("Star")).exists());
 
-    // Checking if the li containing the text exists on page
-    assert.ok(await page.exists(listItem(contains("Java runner"))));
-    assert.ok(await page.exists(listItem(contains("C# runner"))));
-    assert.ok(await page.exists(listItem(contains("Ruby runner"))));
-    assert.ok(await page.exists(listItem(contains("Java runner"))));
+    assert.ok(await text("Gauge Plugins").exists());
+
+    assert.ok(await listItem(contains("Java runner")).exists());
+    assert.ok(await listItem(contains("C# runner")).exists());
+    assert.ok(await listItem(contains("Ruby runner")).exists());
+});
+
+step("Search for Hooks", async function() {
+    await write("Hooks", into($("input[placeholder='Search docs']")));
+    await press(keys.ENTER);
+    await waitUntil(link("Language Features").exists);
 });

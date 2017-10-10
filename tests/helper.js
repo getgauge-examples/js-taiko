@@ -1,121 +1,137 @@
-const helper = require('puppeteer/lib/helper');
+const puppeteer = require('puppeteer');
+const { helper } = require('puppeteer/lib/helper');
 const ElementHandle = require('puppeteer/lib/ElementHandle');
 
-class Page {
-    constructor(source) {
-        this.source = source;
-    }
+let page, browser;
 
-    static async create(browser) {
-        return new Page(await browser.newPage());
-    }
+const openBrowser = async(options) => {
+    browser = await puppeteer.launch(options);
+    page = await browser.newPage();
+}
 
-    async goto(url, options) {
-        return await this.source.goto(url, options);
-    }
+const closeBrowser = async(options) => await browser.close();
 
-    url() {
-        return this.source.url();
-    }
+const goto = async(url, options) => await page.goto(url, options);
 
-    async click(selector, waitForNavigation = true) {
-        return await this._click(selector, {}, waitForNavigation);
-    }
+const click = async(selector, options = {}, waitForNavigation = true) => {
+    const element = await getElement(selector);
+    if (!element) return;
+    const result = await element.click(options);
+    await element.dispose();
+    if (waitForNavigation) await page.waitForNavigation();
+}
 
-    async doubleClick(selector, waitForPageToLoad = true) {
-        return await this._click(selector, {
-            clickCount: 2
-        }, waitForPageToLoad)
-    }
+const doubleClick = async(selector, options = {}, waitForNavigation = true) => {
+    await click(selector, { clickCount: 2 }, waitForNavigation);
+}
 
-    async exists(selector) {
-        return (await this._getElement(selector)) != null;
-    }
+const hover = async(selector) => {
+    const element = await getElement(selector);
+    if (!element) return;
+    await element.hover();
+    await element.dispose();
+}
 
-    async write(text, options) {
-        return this.source.type(text, options);
-    }
+const focus = async(selector) => {
+    const element = await getElement(selector);
+    if (!element) return;
+    await page.evaluate(e => e.focus(), element);
+    await element.dispose();
+}
 
-    async press(key, options) {
-        return this.source.press(key, options);
-    }
+const write = async(text, into) => {
+    if (into) await focus(into);
+    await page.type(text);
+}
 
-    async hover(selector) {
-        const element = await this._getElement(selector);
-        if (!element) return null
-        await element.hover();
-        await element.dispose();
-    }
+const press = async(key, options) => {
+    await page.press("", { text: String.fromCharCode(key), delay: 0 });
+}
 
-    async _click(selector, options = {}, wait = true) {
-        const element = await this._getElement(selector);
-        if (!element) return null
-        const result = await element.click(options)
-        return wait ? await this.source.waitForNavigation() : result;
-    }
-
-    async _getElement(selector) {
-        return await (selector instanceof CssSelectorToElement ? this.source.$(selector.selector()) : xpath(this.source, getSelector(selector)));
+const waitUntil = async(condition, options = { intervalTime: 1000, timeout: 10000 }) => {
+    var start = new Date().getTime();
+    while (true) {
+        try {
+            if (await condition()) break;
+        } catch (e) {
+            continue;
+        }
+        if ((new Date().getTime() - start) > options.timeout)
+            throw new Error(`waiting failed: timeout ${options.timeout}ms exceeded`);
+        sleep(options.intervalTime);
     }
 }
 
-class Converter {
-    constructor(selector) {
-        this.identifier = selector;
-    }
-
-    selector() {
-        return this.identifier;
-    }
+const $ = (selector) => {
+    const get = async() => await (selector.startsWith("//") ? xpath(selector) : page.$(selector));
+    return { get: get, exists: async() => (await get()) != null, };
 }
 
-class StringToSelector extends Converter {
-    static create(selector) {
-        assertType(selector);
-        return new StringToSelector(selector);
-    }
+const image = (selector) => {
+    assertType(selector);
+    const get = async() => await page.$(`img[alt="${selector}"]`);
+    return { get: get, exists: async() => (await get()) != null, };
 }
 
-class SelectorToElement extends Converter {
-    static create(selector) {
-        assertType(selector,
-            (obj) => obj instanceof StringToSelector || isString(obj),
-            "String Selector or String parameter expected");
-        return new SelectorToElement(selector);
-    }
+const link = (selector) => {
+    const get = async() => await getElementByTag(selector, "a");
+    return { get: get, exists: async() => (await get()) != null, };
 }
 
-class CssSelectorToElement extends Converter {
-    static create(selector) {
-        assertType(selector, isString, "String parameter expected");
-        return new CssSelectorToElement(selector);
-    }
+const listItem = (selector) => {
+    const get = async() => await getElementByTag(selector, "li");
+    return { get: get, exists: async() => (await get()) != null, }
 }
 
-const getSelector = (selector) => (selector instanceof Converter ? selector : text(selector)).selector();
+const text = (text) => {
+    assertType(text);
+    const get = async(element = "*") => await xpath(`//*[text()="${text}"]`.replace("*", element));
+    return { get: get, exists: async() => (await get()) != null, };
+}
+
+const contains = (text) => {
+    assertType(text);
+    const get = async(element = "*") => await xpath(`//*[contains(.,"${text}")]`.replace("*", element));
+    return { get: get, exists: async() => (await get()) != null, }
+}
+
+const getElement = async(selector) => {
+    if (isString(selector)) return await text(selector).get();
+    else if (isSelector(selector)) return await selector.get();
+    return null;
+}
+
+const getElementByTag = async(selector, tag) => {
+    if (isString(selector)) return await text(selector).get(tag);
+    else if (isSelector(selector)) return selector.get(tag);
+    return null;
+}
 
 const isString = (obj) => typeof obj == 'string' || obj instanceof String;
 
-const xpath = async(page, selector) => {
-    const remoteObject = await page._frameManager.mainFrame()._rawEvaluate(selector => {
+const isSelector = (obj) => obj['get'] && obj['exists'];
+
+const xpath = async(selector) => {
+    const frame = page.mainFrame();
+    const remoteObject = await page.mainFrame()._rawEvaluate(selector => {
         let node, results = [];
         let result = document.evaluate(selector, document, null, XPathResult.ANY_TYPE, null);
         while (node = result.iterateNext())
             results.push(node);
         return results;
     }, selector);
-    const response = await page._client.send('Runtime.getProperties', {
+    const response = await frame._client.send('Runtime.getProperties', {
         objectId: remoteObject.objectId,
         ownProperties: true
     });
     const properties = response.result;
     const result = [];
-    const releasePromises = [helper.releaseObject(page._client, remoteObject)];
+    const releasePromises = [helper.releaseObject(frame._client, remoteObject)];
     for (const property of properties) {
         if (property.enumerable && property.value.subtype === 'node')
-            result.push(new ElementHandle(page._client, property.value, page._mouse, page._touchscreen));
+            result.push(new ElementHandle(frame, frame._client, property.value, frame._mouse, frame._touchscreen));
         else
-            releasePromises.push(helper.releaseObject(page._client, property.value));
+            releasePromises.push(helper.releaseObject(frame._client, property.value));
     }
     await Promise.all(releasePromises);
     return result.length > 0 ? result[0] : null;
@@ -125,22 +141,31 @@ const assertType = (obj, condition = isString, message = "String parameter expec
     if (!condition(obj)) throw new Error(message);
 }
 
-const text = (selector) => {
-    assertType(selector);
-    return new StringToSelector(`//*[text()="${selector}"]`);
+const sleep = (milliseconds) => {
+    var start = new Date().getTime();
+    for (var i = 0; i < 1e7; i++)
+        if ((new Date().getTime() - start) > milliseconds) break;
 }
 
 const dummy = (e) => e;
 
 module.exports = {
-    Page: Page,
-    text: text,
-    into: dummy,
+    goto,
+    openBrowser,
+    closeBrowser,
+    image,
+    click,
+    doubleClick,
+    write,
+    press,
+    text,
+    $,
+    contains,
+    hover,
+    link,
+    listItem,
+    waitUntil,
     to: dummy,
-    contains: (selector) => StringToSelector.create(`//*[contains(.,"${selector}")]`),
-    xpath: (selector) => StringToSelector.create(selector),
-    link: (selector) => SelectorToElement.create(getSelector(selector).replace("*", "a")),
-    listItem: (selector) => SelectorToElement.create(getSelector(selector).replace("*", "li")),
-    button: (selector) => SelectorToElement.create(getSelector(selector).replace("*", "button")),
-    image: (selector) => CssSelectorToElement.create(`img[alt="${selector}"]`),
-};
+    into: dummy,
+    keys: { ENTER: 13, },
+}

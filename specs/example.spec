@@ -25,3 +25,8 @@ Plugins
 -------
 * Go to plugins page
 * Display the official plugins
+
+Documentation Search
+--------------------
+* Go to Gauge documentation page
+* Search for Hooks
