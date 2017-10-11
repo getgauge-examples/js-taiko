@@ -30,3 +30,8 @@ Documentation Search
 --------------------
 * Go to Gauge documentation page
 * Search for Hooks
+
+IDE Plugins
+-----------
+* Go to Gauge documentation page
+* Display the IDE plugins
