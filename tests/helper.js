@@ -15,20 +15,20 @@ const goto = async(url, options) => page.goto(url, options);
 
 const reload = async(options) => page.reload(options);
 
-const click = async(selector, options = {}, waitForNavigation = true) => {
+const click = async(selector, options = { waitForNavigation: true }) => {
     const element = await getElement(selector);
     if (!element) return;
     await element.click(options);
     await element.dispose();
-    if (waitForNavigation) await page.waitForNavigation();
+    if (options.waitForNavigation) await page.waitForNavigation();
 }
 
-const doubleClick = async(selector, options = {}, waitForNavigation = true) => {
-    await click(selector, { clickCount: 2 }, waitForNavigation);
+const doubleClick = async(selector, options = { waitForNavigation: true }) => {
+    await click(selector, Object.assign({ clickCount: 2, }, options));
 }
 
-const rightClick = async(selector, options = {}, waitForNavigation = true) => {
-    await click(selector, { button: 'right' }, waitForNavigation);
+const rightClick = async(selector, options = { waitForNavigation: true }) => {
+    await click(selector, Object.assign({ button: 'right', }, options));
 }
 
 const hover = async(selector) => {
@@ -84,10 +84,58 @@ const listItem = (selector) => {
     return { get: get, exists: exists(get), };
 }
 
+const button = (selector) => {
+    const get = async() => getElementByTag(selector, 'button');
+    return { get: get, exists: exists(get), };
+}
+
 const textField = (selector, attribute = 'placeholder') => {
     assertType(selector);
     const get = async() => page.$(`input[${attribute}='${selector}']`);
-    return { get: get, exists: exists(get), value: async() => page.evaluate(e => e.value, await get()) }
+    return { get: get, exists: exists(get), value: async() => page.evaluate(e => e.value, await get()), }
+}
+
+const comboBox = (selector) => {
+    assertType(selector);
+    const get = async() => xpath$(`//select[@id=(//label[contains(text(),'${selector}')]/@for)]`);
+    return {
+        get: get,
+        exists: exists(get),
+        select: async(value) => {
+            const box = await get();
+            if (!box) throw new Error('Combo Box not found');
+            await page.evaluate((box, value) => {
+                if (!box) return;
+                for (var i = 0; i < box.options.length; i++) {
+                    if (box.options[i].text === value) {
+                        box.options[i].selected = true;
+                        return;
+                    }
+                }
+            }, box, value)
+        },
+        value: async() => page.evaluate(e => e.value, await get())
+    }
+}
+
+const checkBox = (selector) => {
+    assertType(selector);
+    const get = async() => xpath$(`//input[@type='checkbox'][@id=(//label[contains(text(),'${selector}')]/@for)]`);
+    return {
+        get: get,
+        exists: exists(get),
+        isChecked: async() => page.evaluate(e => e.checked, await get())
+    }
+}
+
+const radioButton = (selector) => {
+    assertType(selector);
+    const get = async() => xpath$(`//input[@type='radio'][@id=(//label[contains(text(),'${selector}')]/@for)]`);
+    return {
+        get: get,
+        exists: exists(get),
+        isSelected: async() => page.evaluate(e => e.checked, await get())
+    }
 }
 
 const text = (text) => {
@@ -204,6 +252,10 @@ module.exports = {
     listItem,
     textField,
     image,
+    button,
+    comboBox,
+    checkBox,
+    radioButton,
     click,
     doubleClick,
     rightClick,
