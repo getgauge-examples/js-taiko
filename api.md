@@ -25,11 +25,12 @@
 |comboBox   |✔   |
 |checkBox   |✔   |
 |radioButton|✔   |
-|alert      |✘   |
+|scrollTo   |✔   |
 |scrollDown |✘   |
 |scrollUp   |✘   |
 |scrollRight|✘   |
 |scrollLeft |✘   |
+|alert      |✘   |
 |drag       |✘   |
 |dragFile   |✘   |
 |toLeftOf   |✘   |

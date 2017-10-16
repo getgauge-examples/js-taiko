@@ -1,9 +1,9 @@
 'use strict';
 const assert = require('assert');
 const {
-    openBrowser, closeBrowser, meta, goto, reload ,$,$$, link, listItem, inputField,
-    textField, image, button, comboBox, checkBox, radioButton, text, contains, click,
-    doubleClick, rightClick, write, press, upload, highlight, hover, screenshot, to, into,
+    openBrowser, closeBrowser, meta, goto, reload ,$, $$, link, listItem, inputField, textField,
+    image, button, comboBox, checkBox, radioButton, text, contains, click, doubleClick, rightClick,
+    write, press, upload, highlight, scrollTo, hover, screenshot, to, into,
 } = require('./helper');
 
 beforeSuite(async() => openBrowser());
@@ -53,6 +53,9 @@ step('Search for Hooks', async() => {
 
 step('Display the IDE plugins', async() => {
     await click('Using Gauge');
+
+    await scrollTo(listItem('Intellij IDEA'));
+
     assert.ok(await listItem('Intellij IDEA').exists());
     assert.ok(await listItem('Visual Studio').exists());
 });

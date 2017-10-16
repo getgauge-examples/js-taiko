@@ -69,6 +69,13 @@ const highlight = async(selector) => {
     await element.dispose();
 }
 
+const scrollTo = async(selector) => {
+    const element = await getElement(selector);
+    if (!element) throw new Error("Element not found");
+    await page.evaluate((element) => element.scrollIntoViewIfNeeded(), element)
+    await element.dispose();
+}
+
 const $ = (selector) => {
     const get = async() => selector.startsWith('//') ? $xpath(selector) : page.$(selector);
     return { get: get, exists: exists(get), };
@@ -270,6 +277,7 @@ module.exports = {
     press,
     upload,
     highlight,
+    scrollTo,
     hover,
     screenshot,
     to: dummy,
