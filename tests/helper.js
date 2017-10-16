@@ -39,13 +39,14 @@ const hover = async(selector) => {
 }
 
 const focus = async(selector, dispose = true) => {
-    const element = await _focus(selector)
+    const element = await _focus(selector);
     if (element) await element.dispose();
 }
 
 const write = async(text, into) => {
-    if (into) await focus(into);
-    await page.type(text);
+    const element = await _focus(into);
+    await element.type(text);
+    await element.dispose();
 }
 
 const upload = async(filepath, to) => {
@@ -55,7 +56,7 @@ const upload = async(filepath, to) => {
 }
 
 const press = async(key, options) => {
-    await page.press('', { text: String.fromCharCode(key), delay: 0 });
+    await page.keyboard.press('', { text: String.fromCharCode(key), delay: 0 });
 }
 
 const $ = (selector) => {
@@ -179,28 +180,20 @@ const xpath$ = async(selector) => {
 }
 
 const xpath$$ = async(selector) => {
-    const frame = page.mainFrame();
-    const remoteObject = await page.mainFrame()._rawEvaluate(selector => {
+    const arrayHandle = await page.mainFrame()._context.evaluateHandle(selector => {
         let node, results = [];
         let result = document.evaluate(selector, document, null, XPathResult.ANY_TYPE, null);
         while (node = result.iterateNext())
             results.push(node);
         return results;
     }, selector);
-    const response = await frame._client.send('Runtime.getProperties', {
-        objectId: remoteObject.objectId,
-        ownProperties: true
-    });
-    const properties = response.result;
+    const properties = await arrayHandle.getProperties();
+    await arrayHandle.dispose();
     const result = [];
-    const releasePromises = [helper.releaseObject(frame._client, remoteObject)];
-    for (const property of properties) {
-        if (property.enumerable && property.value.subtype === 'node')
-            result.push(new ElementHandle(frame, frame._client, property.value, frame._mouse, frame._touchscreen));
-        else
-            releasePromises.push(helper.releaseObject(frame._client, property.value));
+    for (const property of properties.values()) {
+        const elementHandle = property.asElement();
+        if (elementHandle) result.push(elementHandle);
     }
-    await Promise.all(releasePromises);
     return result;
 }
 
@@ -230,9 +223,7 @@ const waitUntil = async(condition, options = { intervalTime: 1000, timeout: 1000
     while (true) {
         try {
             if (await condition()) break;
-        } catch (e) {
-            continue;
-        }
+        } catch (e) {}
         if ((new Date().getTime() - start) > options.timeout)
             throw new Error(`waiting failed: timeout ${options.timeout}ms exceeded`);
         sleep(options.intervalTime);
