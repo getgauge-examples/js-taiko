@@ -1,9 +1,9 @@
 'use strict';
 const assert = require('assert');
 const {
-    openBrowser, closeBrowser, goto, reload, $, $$, link, listItem, textField, inputField,
-    image, button, comboBox, checkBox, radioButton, click, doubleClick, rightClick, write,
-    press, text, contains, upload, to, into, hover,
+    openBrowser, closeBrowser, meta, goto, reload ,$,$$, link, listItem, inputField,
+    textField, image, button, comboBox, checkBox, radioButton, text, contains, click,
+    doubleClick, rightClick, write, press, upload, highlight, hover, to, into,
 } = require('./helper');
 
 beforeSuite(async() => openBrowser());
@@ -36,6 +36,8 @@ step('Display the official plugins', async() => {
     assert.ok(await text('Gauge Plugins').exists());
 
     assert.ok(await contains('Java runner').exists());
+    await highlight(contains('Java runner'));
+
     assert.ok(await contains('C# runner').exists());
     assert.ok(await contains('Ruby runner').exists());
 });

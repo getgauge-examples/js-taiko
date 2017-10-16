@@ -11,6 +11,8 @@ const openBrowser = async(options) => {
 
 const closeBrowser = async(options) => browser.close();
 
+const meta = () => ({ page, browser, });
+
 const goto = async(url, options) => page.goto(url, options);
 
 const reload = async(options) => page.reload(options);
@@ -59,6 +61,13 @@ const upload = async(filepath, to) => {
 }
 
 const press = async(key, options) => await page.keyboard.press(key);
+
+const highlight = async(selector) => {
+    const element = await getElement(selector);
+    if (!element) throw new Error("Element not found");
+    await page.evaluate((element) => element.style.border = '0.5em solid red', element)
+    await element.dispose();
+}
 
 const $ = (selector) => {
     const get = async() => selector.startsWith('//') ? $xpath(selector) : page.$(selector);
@@ -236,6 +245,7 @@ const dummy = (e) => e;
 module.exports = {
     openBrowser,
     closeBrowser,
+    meta,
     goto,
     reload,
     $,
@@ -249,14 +259,15 @@ module.exports = {
     comboBox,
     checkBox,
     radioButton,
+    text,
+    contains,
     click,
     doubleClick,
     rightClick,
     write,
     press,
     upload,
-    text,
-    contains,
+    highlight,
     hover,
     to: dummy,
     into: dummy,
