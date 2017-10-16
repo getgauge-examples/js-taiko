@@ -12,7 +12,7 @@ afterSuite(async() => closeBrowser());
 
 step('Navigate to Gauge homepage <query>', async query => goto(query));
 
-step('Display the Gauge logo', async() => assert.ok(image('Gauge logo').exists()));
+step('Display the Gauge logo', async() => assert.ok(await image('Gauge logo').exists()));
 
 step('Go to Gauge get started page', async() => click('Get Started'));
 

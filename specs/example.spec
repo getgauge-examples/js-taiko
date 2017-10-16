@@ -14,7 +14,7 @@ Logo
 Get Started
 -----------
 * Go to Gauge get started page
-* Display the sub title "Choose your OS & download" 
+* Display the sub title "Choose your OS & download"
 
 Documentation
 -------------
