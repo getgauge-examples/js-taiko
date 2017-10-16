@@ -17,7 +17,7 @@ const reload = async(options) => page.reload(options);
 
 const click = async(selector, options = { waitForNavigation: true }) => {
     const element = await getElement(selector);
-    if (!element) return;
+    if (!element) throw new Error("Element not found");
     await element.click(options);
     await element.dispose();
     if (options.waitForNavigation) await page.waitForNavigation();
@@ -33,14 +33,14 @@ const rightClick = async(selector, options = { waitForNavigation: true }) => {
 
 const hover = async(selector) => {
     const element = await getElement(selector);
-    if (!element) return;
+    if (!element) throw new Error("Element not found");
     await element.hover();
     await element.dispose();
 }
 
 const focus = async(selector, dispose = true) => {
     const element = await _focus(selector);
-    if (element) await element.dispose();
+    await element.dispose();
 }
 
 const write = async(text, into) => {
@@ -50,22 +50,23 @@ const write = async(text, into) => {
 }
 
 const upload = async(filepath, to) => {
-    const element = await _focus(to, false);
+    let element;
+    if (isString(to)) element = await $xpath(`//input[@type='file'][@id=(//label[contains(text(),'${to}')]/@for)]`);
+    else if (isSelector(to)) element = await to.get();
+    else throw Error("Invalid element passed as paramenter");
     await element.uploadFile(filepath);
     await element.dispose();
 }
 
-const press = async(key, options) => {
-    await page.keyboard.press('', { text: String.fromCharCode(key), delay: 0 });
-}
+const press = async(key, options) => await page.keyboard.press(key);
 
 const $ = (selector) => {
-    const get = async() => selector.startsWith('//') ? xpath$(selector) : page.$(selector);
+    const get = async() => selector.startsWith('//') ? $xpath(selector) : page.$(selector);
     return { get: get, exists: exists(get), };
 }
 
 const $$ = (selector) => {
-    const get = async() => selector.startsWith('//') ? xpath$$(selector) : page.$$(selector);
+    const get = async() => selector.startsWith('//') ? $$xpath(selector) : page.$$(selector);
     return { get: get, exists: async() => (await get()).length > 0, };
 }
 
@@ -90,15 +91,21 @@ const button = (selector) => {
     return { get: get, exists: exists(get), };
 }
 
-const textField = (selector, attribute = 'placeholder') => {
+const inputField = (attribute, selector) => {
     assertType(selector);
     const get = async() => page.$(`input[${attribute}='${selector}']`);
     return { get: get, exists: exists(get), value: async() => page.evaluate(e => e.value, await get()), }
 }
 
+const textField = (selector) => {
+    assertType(selector);
+    const get = async() => $xpath(`//input[@type='text'][@id=(//label[contains(text(),'${selector}')]/@for)]`);
+    return { get: get, exists: exists(get), value: async() => page.evaluate(e => e.value, await get()), }
+}
+
 const comboBox = (selector) => {
     assertType(selector);
-    const get = async() => xpath$(`//select[@id=(//label[contains(text(),'${selector}')]/@for)]`);
+    const get = async() => $xpath(`//select[@id=(//label[contains(text(),'${selector}')]/@for)]`);
     return {
         get: get,
         exists: exists(get),
@@ -106,13 +113,7 @@ const comboBox = (selector) => {
             const box = await get();
             if (!box) throw new Error('Combo Box not found');
             await page.evaluate((box, value) => {
-                if (!box) return;
-                for (var i = 0; i < box.options.length; i++) {
-                    if (box.options[i].text === value) {
-                        box.options[i].selected = true;
-                        return;
-                    }
-                }
+                Array.from(box.options).filter(o => o.text === value).forEach(o => o.selected = true);
             }, box, value)
         },
         value: async() => page.evaluate(e => e.value, await get())
@@ -121,7 +122,7 @@ const comboBox = (selector) => {
 
 const checkBox = (selector) => {
     assertType(selector);
-    const get = async() => xpath$(`//input[@type='checkbox'][@id=(//label[contains(text(),'${selector}')]/@for)]`);
+    const get = async() => $xpath(`//input[@type='checkbox'][@id=(//label[contains(text(),'${selector}')]/@for)]`);
     return {
         get: get,
         exists: exists(get),
@@ -131,7 +132,7 @@ const checkBox = (selector) => {
 
 const radioButton = (selector) => {
     assertType(selector);
-    const get = async() => xpath$(`//input[@type='radio'][@id=(//label[contains(text(),'${selector}')]/@for)]`);
+    const get = async() => $xpath(`//input[@type='radio'][@id=(//label[contains(text(),'${selector}')]/@for)]`);
     return {
         get: get,
         exists: exists(get),
@@ -141,13 +142,13 @@ const radioButton = (selector) => {
 
 const text = (text) => {
     assertType(text);
-    const get = async(element = '*') => xpath$(`//*[text()='${text}']`.replace('*', element));
+    const get = async(element = '*') => $xpath(`//*[text()='${text}']`.replace('*', element));
     return { get: get, exists: exists(get), };
 }
 
 const contains = (text) => {
     assertType(text);
-    const get = async(element = '*') => xpath$(`//*[contains(text(),'${text}')]`.replace('*', element));
+    const get = async(element = '*') => $xpath(`//*[contains(text(),'${text}')]`.replace('*', element));
     return { get: get, exists: exists(get), };
 }
 
@@ -165,7 +166,7 @@ const getElementByTag = async(selector, tag) => {
 
 const _focus = async(selector) => {
     const element = await getElement(selector);
-    if (!element) return null;
+    if (!element) throw new Error("Element not found");
     await page.evaluate(e => e.focus(), element);
     return element;
 }
@@ -174,12 +175,12 @@ const isString = (obj) => typeof obj === 'string' || obj instanceof String;
 
 const isSelector = (obj) => obj['get'] && obj['exists'];
 
-const xpath$ = async(selector) => {
-    const result = await xpath$$(selector);
+const $xpath = async(selector) => {
+    const result = await $$xpath(selector);
     return result.length > 0 ? result[0] : null;
 }
 
-const xpath$$ = async(selector) => {
+const $$xpath = async(selector) => {
     const arrayHandle = await page.mainFrame()._context.evaluateHandle(selector => {
         let node, results = [];
         let result = document.evaluate(selector, document, null, XPathResult.ANY_TYPE, null);
@@ -241,6 +242,7 @@ module.exports = {
     $$,
     link,
     listItem,
+    inputField,
     textField,
     image,
     button,
@@ -258,5 +260,4 @@ module.exports = {
     hover,
     to: dummy,
     into: dummy,
-    keys: { ENTER: 13, },
 }

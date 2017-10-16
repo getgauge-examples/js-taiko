@@ -1,9 +1,9 @@
 'use strict';
 const assert = require('assert');
 const {
-    openBrowser, closeBrowser, goto, reload, $, $$, link, listItem, textField, image,
-    button, comboBox, checkBox, radioButton, click, doubleClick, rightClick, write,
-    press, text, contains, upload, to, into, keys, hover,
+    openBrowser, closeBrowser, goto, reload, $, $$, link, listItem, textField, inputField,
+    image, button, comboBox, checkBox, radioButton, click, doubleClick, rightClick, write,
+    press, text, contains, upload, to, into, hover,
 } = require('./helper');
 
 beforeSuite(async() => openBrowser());
@@ -33,7 +33,6 @@ step('Go to plugins page', async() => {
 });
 
 step('Display the official plugins', async() => {
-
     assert.ok(await text('Gauge Plugins').exists());
 
     assert.ok(await contains('Java runner').exists());
@@ -42,9 +41,10 @@ step('Display the official plugins', async() => {
 });
 
 step('Search for Hooks', async() => {
-    await write('Hooks', into(textField('Search docs')));
-    assert.equal(await textField('Search docs').value(), 'Hooks')
-    await press(keys.ENTER);
+    const field = inputField('placeholder', 'Search docs');
+    await write('Hooks', into(field));
+    assert.equal(await field.value(), 'Hooks')
+    await press('Enter');
 
     assert.ok(await link('Language Features').exists());
 });
@@ -56,22 +56,35 @@ step('Display the IDE plugins', async() => {
 });
 
 step('Combo Box', async() => {
-    const box = comboBox("Cars");
+    const box = comboBox('Cars');
     assert.ok(await box.exists());
-    await box.select("Saab");
-    assert.equal(await box.value(), "saab");
+    await box.select('Saab');
+    assert.equal(await box.value(), 'saab');
 });
 
 step('Check Box', async() => {
-    const box = checkBox("Vehicle");
+    const box = checkBox('Vehicle');
     assert.ok(await box.exists());
     await click(box, { waitForNavigation: false });
     assert.ok(await box.isChecked());
 });
 
 step('Radio Button', async() => {
-    const button = radioButton("Female");
+    const button = radioButton('Female');
     assert.ok(await button.exists());
     await click(button, { waitForNavigation: false });
     assert.ok(await button.isSelected());
+});
+
+step('Upload', async() => {
+    const field = inputField('id', 'file');
+    await upload('file.txt', to(field));
+    assert.ok((await field.value()).endsWith('file.txt'));
+});
+
+step('Text Field', async() => {
+    const field = textField('Username');
+    await write('Gopher', into(field));
+    assert.ok(await field.exists());
+    assert.equal(await field.value(), 'Gopher');
 });
