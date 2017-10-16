@@ -180,6 +180,8 @@ const _focus = async(selector) => {
     return element;
 }
 
+const screenshot = async(options) => page.screenshot(options);
+
 const isString = (obj) => typeof obj === 'string' || obj instanceof String;
 
 const isSelector = (obj) => obj['get'] && obj['exists'];
@@ -269,6 +271,7 @@ module.exports = {
     upload,
     highlight,
     hover,
+    screenshot,
     to: dummy,
     into: dummy,
 }

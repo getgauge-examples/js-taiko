@@ -3,7 +3,7 @@ const assert = require('assert');
 const {
     openBrowser, closeBrowser, meta, goto, reload ,$,$$, link, listItem, inputField,
     textField, image, button, comboBox, checkBox, radioButton, text, contains, click,
-    doubleClick, rightClick, write, press, upload, highlight, hover, to, into,
+    doubleClick, rightClick, write, press, upload, highlight, hover, screenshot, to, into,
 } = require('./helper');
 
 beforeSuite(async() => openBrowser());
