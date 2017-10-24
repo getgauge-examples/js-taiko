@@ -18,10 +18,9 @@ const goto = async(url, options) => page.goto(url, options);
 const reload = async(options) => page.reload(options);
 
 const click = async(selector, options = { waitForNavigation: true }) => {
-    const element = await getElement(selector);
-    if (!element) throw new Error("Element not found");
-    await element.click(options);
-    await element.dispose();
+    const e = await getElement(selector);
+    await e.click(options);
+    await e.dispose();
     if (options.waitForNavigation) await page.waitForNavigation();
 }
 
@@ -34,46 +33,52 @@ const rightClick = async(selector, options = { waitForNavigation: true }) => {
 }
 
 const hover = async(selector) => {
-    const element = await getElement(selector);
-    if (!element) throw new Error("Element not found");
-    await element.hover();
-    await element.dispose();
+    const e = await getElement(selector);
+    await e.hover();
+    await e.dispose();
 }
 
-const focus = async(selector, dispose = true) => {
-    const element = await _focus(selector);
-    await element.dispose();
-}
+const focus = async(selector, dispose = true) => (await _focus(selector)).dispose();
 
 const write = async(text, into) => {
-    const element = await _focus(into);
-    await element.type(text);
-    await element.dispose();
+    const e = await _focus(into);
+    await e.type(text);
+    await e.dispose();
 }
 
 const upload = async(filepath, to) => {
-    let element;
-    if (isString(to)) element = await $xpath(`//input[@type='file'][@id=(//label[contains(text(),'${to}')]/@for)]`);
-    else if (isSelector(to)) element = await to.get();
+    let e;
+    if (isString(to)) e = await $xpath(`//input[@type='file'][@id=(//label[contains(text(),'${to}')]/@for)]`);
+    else if (isSelector(to)) e = await to.get();
     else throw Error("Invalid element passed as paramenter");
-    await element.uploadFile(filepath);
-    await element.dispose();
+    await e.uploadFile(filepath);
+    await e.dispose();
 }
 
 const press = async(key, options) => await page.keyboard.press(key);
 
-const highlight = async(selector) => {
-    const element = await getElement(selector);
-    if (!element) throw new Error("Element not found");
-    await page.evaluate((element) => element.style.border = '0.5em solid red', element)
-    await element.dispose();
+const highlight = async(selector) => evaluate(selector, e => e.style.border = '0.5em solid red');
+
+const scrollTo = async(selector) => evaluate(selector, e => e.scrollIntoViewIfNeeded());
+
+const scrollRight = async(selector, px = 100) => {
+    Number.isInteger(selector) ? await page.evaluate(px => window.scrollBy(px, 0), px) :
+        evaluate(selector, (e, px) => e.scrollLeft += px, px);
 }
 
-const scrollTo = async(selector) => {
-    const element = await getElement(selector);
-    if (!element) throw new Error("Element not found");
-    await page.evaluate((element) => element.scrollIntoViewIfNeeded(), element)
-    await element.dispose();
+const scrollLeft = async(selector, px = 100) => {
+    Number.isInteger(selector) ? await page.evaluate(px => window.scrollBy(px * -1, 0), px) :
+        evaluate(selector, (e, px) => e.scrollLeft -= px, px);
+}
+
+const scrollUp = async(selector, px = 100) => {
+    Number.isInteger(selector) ? await page.evaluate(px => window.scrollBy(0, px * -1), px) :
+        evaluate(selector, (e, px) => e.scrollTop -= px, px);
+}
+
+const scrollDown = async(selector, px = 100) => {
+    Number.isInteger(selector) ? await page.evaluate(px => window.scrollBy(0, px), px) :
+        evaluate(selector, (e, px) => e.scrollTop += px, px);
 }
 
 const $ = (selector) => {
@@ -171,7 +176,7 @@ const contains = (text) => {
 const getElement = async(selector) => {
     if (isString(selector)) return contains(selector).get();
     else if (isSelector(selector)) return selector.get();
-    return null;
+    throw new Error("Element not found");
 }
 
 const getElementByTag = async(selector, tag) => {
@@ -181,10 +186,9 @@ const getElementByTag = async(selector, tag) => {
 }
 
 const _focus = async(selector) => {
-    const element = await getElement(selector);
-    if (!element) throw new Error("Element not found");
-    await page.evaluate(e => e.focus(), element);
-    return element;
+    const e = await getElement(selector);
+    await page.evaluate(e => e.focus(), e);
+    return e;
 }
 
 const screenshot = async(options) => page.screenshot(options);
@@ -249,6 +253,12 @@ const waitUntil = async(condition, options = { intervalTime: 1000, timeout: 1000
     }
 }
 
+const evaluate = async(selector, callback, ...args) => {
+    const e = await getElement(selector);
+    await page.evaluate(callback, e, ...args);
+    await e.dispose();
+}
+
 const dummy = (e) => e;
 
 module.exports = {
@@ -278,6 +288,10 @@ module.exports = {
     upload,
     highlight,
     scrollTo,
+    scrollRight,
+    scrollLeft,
+    scrollUp,
+    scrollDown,
     hover,
     screenshot,
     to: dummy,

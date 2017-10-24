@@ -1,9 +1,10 @@
 'use strict';
 const assert = require('assert');
 const {
-    openBrowser, closeBrowser, meta, goto, reload ,$, $$, link, listItem, inputField, textField,
-    image, button, comboBox, checkBox, radioButton, text, contains, click, doubleClick, rightClick,
-    write, press, upload, highlight, scrollTo, hover, screenshot, to, into,
+    openBrowser, closeBrowser, meta, goto, reload ,$, $$, link, listItem, inputField,
+    textField, image, button, comboBox, checkBox, radioButton, text, contains, click,
+    doubleClick, rightClick, write, press, upload, highlight, scrollTo, scrollRight,
+    scrollLeft, scrollUp, scrollDown, hover, screenshot, to, into,
 } = require('./helper');
 
 beforeSuite(async() => openBrowser());
@@ -16,7 +17,7 @@ step('Display the Gauge logo', async() => assert.ok(await image('Gauge logo').ex
 
 step('Go to Gauge get started page', async() => click('Get Started'));
 
-step('Display the sub title <title>', async(title) => assert.ok(await text(title).exists()));
+step('Display the sub title <title>', async title => assert.ok(await text(title).exists()));
 
 step('Go to Gauge documentation page', async() => click($(`//*[text()='Documentation']`)));
 
@@ -92,4 +93,20 @@ step('Text Field', async() => {
     await write('Gopher', into(field));
     assert.ok(await field.exists());
     assert.equal(await field.value(), 'Gopher');
+});
+
+step('Scroll', async() => {
+    await scrollTo($('#myDIV'));
+
+    // Scrolling the page
+    await scrollRight(200);
+    await scrollLeft(100);
+    await scrollDown(200);
+    await scrollUp(100);
+
+    // Scrolling a specific element
+    await scrollRight($('#myDIV'), 200);
+    await scrollLeft($('#myDIV'), 100);
+    await scrollDown($('#myDIV'), 200);
+    await scrollUp($('#myDIV'), 100);
 });

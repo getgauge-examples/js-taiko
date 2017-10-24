@@ -26,10 +26,10 @@
 |checkBox   |✔   |
 |radioButton|✔   |
 |scrollTo   |✔   |
-|scrollDown |✘   |
-|scrollUp   |✘   |
-|scrollRight|✘   |
-|scrollLeft |✘   |
+|scrollDown |✔   |
+|scrollUp   |✔   |
+|scrollRight|✔   |
+|scrollLeft |✔   |
 |alert      |✘   |
 |drag       |✘   |
 |dragFile   |✘   |
