@@ -1,10 +1,10 @@
 'use strict';
 const assert = require('assert');
 const {
-    openBrowser, closeBrowser, browser, page, goto, reload ,$, $$, link, listItem, inputField,
+    browser, page, openBrowser, closeBrowser, goto, reload ,$, $$, link, listItem, inputField,
     textField, image, button, comboBox, checkBox, radioButton, text, contains, click, doubleClick,
     rightClick, write, press, upload, highlight, scrollTo, scrollRight, scrollLeft, scrollUp,
-    scrollDown, hover, screenshot, timeoutSecs, intervalSecs, to, into,
+    scrollDown, hover, screenshot, timeoutSecs, intervalSecs, waitForNavigation, to, into,
 } = require('./helper');
 
 beforeSuite(async() => openBrowser());
@@ -53,12 +53,12 @@ step('Search for Hooks', async() => {
 });
 
 step('Display the IDE plugins', async() => {
-    await click('Using Gauge');
-
-    await scrollTo(listItem('Intellij IDEA'));
+    await click('Using Gauge', waitForNavigation(false));
 
     assert.ok(await listItem('Intellij IDEA').exists());
     assert.ok(await listItem('Visual Studio').exists());
+
+    await scrollTo(listItem('Intellij IDEA'));
 });
 
 step('Combo Box', async() => {
@@ -71,14 +71,14 @@ step('Combo Box', async() => {
 step('Check Box', async() => {
     const box = checkBox('Vehicle');
     assert.ok(await box.exists());
-    await click(box, { waitForNavigation: false });
+    await click(box, waitForNavigation(false));
     assert.ok(await box.isChecked());
 });
 
 step('Radio Button', async() => {
     const button = radioButton('Female');
     assert.ok(await button.exists());
-    await click(button, { waitForNavigation: false });
+    await click(button, waitForNavigation(false));
     assert.ok(await button.isSelected());
 });
 

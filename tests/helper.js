@@ -4,6 +4,10 @@ const ElementHandle = require('puppeteer/lib/ElementHandle');
 
 let b, p;
 
+const browser = () => b;
+
+const page = () => p;
+
 const openBrowser = async(options) => {
     b = await puppeteer.launch(options);
     p = await b.newPage();
@@ -11,36 +15,32 @@ const openBrowser = async(options) => {
 
 const closeBrowser = async(options) => b.close();
 
-const browser = () => b;
-
-const page = () => p;
-
 const goto = async(url, options) => p.goto(url, options);
 
 const reload = async(options) => p.reload(options);
 
-const click = async(selector, options = { waitForNavigation: true }) => {
-    const e = await getElement(selector);
+const click = async(selector, waitForNavigation = true, options = {}) => {
+    const e = await element(selector);
     await e.click(options);
     await e.dispose();
-    if (options.waitForNavigation) await p.waitForNavigation();
+    if (waitForNavigation) await p.waitForNavigation();
 }
 
-const doubleClick = async(selector, options = { waitForNavigation: true }) => {
-    await click(selector, Object.assign({ clickCount: 2, }, options));
+const doubleClick = async(selector, waitForNavigation = true, options = {}) => {
+    await click(selector, waitForNavigation, Object.assign({ clickCount: 2, }, options));
 }
 
-const rightClick = async(selector, options = { waitForNavigation: true }) => {
-    await click(selector, Object.assign({ button: 'right', }, options));
+const rightClick = async(selector, waitForNavigation = true, options = {}) => {
+    await click(selector, waitForNavigation, Object.assign({ button: 'right', }, options));
 }
 
 const hover = async(selector) => {
-    const e = await getElement(selector);
+    const e = await element(selector);
     await e.hover();
     await e.dispose();
 }
 
-const focus = async(selector, dispose = true) => (await _focus(selector)).dispose();
+const focus = async(selector) => await (await _focus(selector)).dispose();
 
 const write = async(text, into) => {
     const e = await _focus(into);
@@ -57,30 +57,30 @@ const upload = async(filepath, to) => {
     await e.dispose();
 }
 
-const press = async(key, options) => await p.keyboard.press(key);
+const press = async(key, options) => p.keyboard.press(key);
 
 const highlight = async(selector) => evaluate(selector, e => e.style.border = '0.5em solid red');
 
 const scrollTo = async(selector) => evaluate(selector, e => e.scrollIntoViewIfNeeded());
 
 const scrollRight = async(selector, px = 100) => {
-    Number.isInteger(selector) ? await p.evaluate(px => window.scrollBy(px, 0), px) :
-        evaluate(selector, (e, px) => e.scrollLeft += px, px);
+    await (Number.isInteger(selector) ? p.evaluate(px => window.scrollBy(px, 0), px) :
+        evaluate(selector, (e, px) => e.scrollLeft += px, px));
 }
 
 const scrollLeft = async(selector, px = 100) => {
-    Number.isInteger(selector) ? await p.evaluate(px => window.scrollBy(px * -1, 0), px) :
-        evaluate(selector, (e, px) => e.scrollLeft -= px, px);
+    await (Number.isInteger(selector) ? p.evaluate(px => window.scrollBy(px * -1, 0), px) :
+        evaluate(selector, (e, px) => e.scrollLeft -= px, px));
 }
 
 const scrollUp = async(selector, px = 100) => {
-    Number.isInteger(selector) ? await p.evaluate(px => window.scrollBy(0, px * -1), px) :
-        evaluate(selector, (e, px) => e.scrollTop -= px, px);
+    await (Number.isInteger(selector) ? p.evaluate(px => window.scrollBy(0, px * -1), px) :
+        evaluate(selector, (e, px) => e.scrollTop -= px, px));
 }
 
 const scrollDown = async(selector, px = 100) => {
-    Number.isInteger(selector) ? await p.evaluate(px => window.scrollBy(0, px), px) :
-        evaluate(selector, (e, px) => e.scrollTop += px, px);
+    await (Number.isInteger(selector) ? p.evaluate(px => window.scrollBy(0, px), px) :
+        evaluate(selector, (e, px) => e.scrollTop += px, px));
 }
 
 const $ = (selector) => {
@@ -175,10 +175,14 @@ const contains = (text) => {
     return { get: get, exists: exists(get), };
 }
 
-const getElement = async(selector) => {
-    if (isString(selector)) return contains(selector).get();
-    else if (isSelector(selector)) return selector.get();
-    throw new Error("Element not found");
+const element = async(selector) => {
+    const e = await (() => {
+        if (isString(selector)) return contains(selector).get();
+        else if (isSelector(selector)) return selector.get();
+        return null;
+    })();
+    if (!e) throw new Error("Element not found");
+    return e;
 }
 
 const getElementByTag = async(selector, tag) => {
@@ -188,7 +192,7 @@ const getElementByTag = async(selector, tag) => {
 }
 
 const _focus = async(selector) => {
-    const e = await getElement(selector);
+    const e = await element(selector);
     await p.evaluate(e => e.focus(), e);
     return e;
 }
@@ -256,18 +260,16 @@ const waitUntil = async(condition, intervalTime, timeout) => {
 }
 
 const evaluate = async(selector, callback, ...args) => {
-    const e = await getElement(selector);
+    const e = await element(selector);
     await p.evaluate(callback, e, ...args);
     await e.dispose();
 }
 
-const dummy = (e) => e;
-
 module.exports = {
-    openBrowser,
-    closeBrowser,
     browser,
     page,
+    openBrowser,
+    closeBrowser,
     goto,
     reload,
     $,
@@ -299,6 +301,7 @@ module.exports = {
     screenshot,
     timeoutSecs: secs => secs * 1000,
     intervalSecs: secs => secs * 1000,
-    to: dummy,
-    into: dummy,
+    waitForNavigation: e => e,
+    to: e => e,
+    into: e => e,
 }
