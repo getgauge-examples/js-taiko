@@ -2,26 +2,28 @@ const puppeteer = require('puppeteer');
 const { helper } = require('puppeteer/lib/helper');
 const ElementHandle = require('puppeteer/lib/ElementHandle');
 
-let page, browser;
+let b, p;
 
 const openBrowser = async(options) => {
-    browser = await puppeteer.launch(options);
-    page = await browser.newPage();
+    b = await puppeteer.launch(options);
+    p = await b.newPage();
 }
 
-const closeBrowser = async(options) => browser.close();
+const closeBrowser = async(options) => b.close();
 
-const meta = () => ({ page, browser, });
+const browser = () => b;
 
-const goto = async(url, options) => page.goto(url, options);
+const page = () => p;
 
-const reload = async(options) => page.reload(options);
+const goto = async(url, options) => p.goto(url, options);
+
+const reload = async(options) => p.reload(options);
 
 const click = async(selector, options = { waitForNavigation: true }) => {
     const e = await getElement(selector);
     await e.click(options);
     await e.dispose();
-    if (options.waitForNavigation) await page.waitForNavigation();
+    if (options.waitForNavigation) await p.waitForNavigation();
 }
 
 const doubleClick = async(selector, options = { waitForNavigation: true }) => {
@@ -55,45 +57,45 @@ const upload = async(filepath, to) => {
     await e.dispose();
 }
 
-const press = async(key, options) => await page.keyboard.press(key);
+const press = async(key, options) => await p.keyboard.press(key);
 
 const highlight = async(selector) => evaluate(selector, e => e.style.border = '0.5em solid red');
 
 const scrollTo = async(selector) => evaluate(selector, e => e.scrollIntoViewIfNeeded());
 
 const scrollRight = async(selector, px = 100) => {
-    Number.isInteger(selector) ? await page.evaluate(px => window.scrollBy(px, 0), px) :
+    Number.isInteger(selector) ? await p.evaluate(px => window.scrollBy(px, 0), px) :
         evaluate(selector, (e, px) => e.scrollLeft += px, px);
 }
 
 const scrollLeft = async(selector, px = 100) => {
-    Number.isInteger(selector) ? await page.evaluate(px => window.scrollBy(px * -1, 0), px) :
+    Number.isInteger(selector) ? await p.evaluate(px => window.scrollBy(px * -1, 0), px) :
         evaluate(selector, (e, px) => e.scrollLeft -= px, px);
 }
 
 const scrollUp = async(selector, px = 100) => {
-    Number.isInteger(selector) ? await page.evaluate(px => window.scrollBy(0, px * -1), px) :
+    Number.isInteger(selector) ? await p.evaluate(px => window.scrollBy(0, px * -1), px) :
         evaluate(selector, (e, px) => e.scrollTop -= px, px);
 }
 
 const scrollDown = async(selector, px = 100) => {
-    Number.isInteger(selector) ? await page.evaluate(px => window.scrollBy(0, px), px) :
+    Number.isInteger(selector) ? await p.evaluate(px => window.scrollBy(0, px), px) :
         evaluate(selector, (e, px) => e.scrollTop += px, px);
 }
 
 const $ = (selector) => {
-    const get = async() => selector.startsWith('//') ? $xpath(selector) : page.$(selector);
+    const get = async() => selector.startsWith('//') ? $xpath(selector) : p.$(selector);
     return { get: get, exists: exists(get), };
 }
 
 const $$ = (selector) => {
-    const get = async() => selector.startsWith('//') ? $$xpath(selector) : page.$$(selector);
+    const get = async() => selector.startsWith('//') ? $$xpath(selector) : p.$$(selector);
     return { get: get, exists: async() => (await get()).length > 0, };
 }
 
 const image = (selector) => {
     assertType(selector);
-    const get = async() => page.$(`img[alt='${selector}']`);
+    const get = async() => p.$(`img[alt='${selector}']`);
     return { get: get, exists: exists(get), };
 }
 
@@ -114,14 +116,14 @@ const button = (selector) => {
 
 const inputField = (attribute, selector) => {
     assertType(selector);
-    const get = async() => page.$(`input[${attribute}='${selector}']`);
-    return { get: get, exists: exists(get), value: async() => page.evaluate(e => e.value, await get()), }
+    const get = async() => p.$(`input[${attribute}='${selector}']`);
+    return { get: get, exists: exists(get), value: async() => p.evaluate(e => e.value, await get()), }
 }
 
 const textField = (selector) => {
     assertType(selector);
     const get = async() => $xpath(`//input[@type='text'][@id=(//label[contains(text(),'${selector}')]/@for)]`);
-    return { get: get, exists: exists(get), value: async() => page.evaluate(e => e.value, await get()), }
+    return { get: get, exists: exists(get), value: async() => p.evaluate(e => e.value, await get()), }
 }
 
 const comboBox = (selector) => {
@@ -133,11 +135,11 @@ const comboBox = (selector) => {
         select: async(value) => {
             const box = await get();
             if (!box) throw new Error('Combo Box not found');
-            await page.evaluate((box, value) => {
+            await p.evaluate((box, value) => {
                 Array.from(box.options).filter(o => o.text === value).forEach(o => o.selected = true);
             }, box, value)
         },
-        value: async() => page.evaluate(e => e.value, await get())
+        value: async() => p.evaluate(e => e.value, await get())
     }
 }
 
@@ -147,7 +149,7 @@ const checkBox = (selector) => {
     return {
         get: get,
         exists: exists(get),
-        isChecked: async() => page.evaluate(e => e.checked, await get())
+        isChecked: async() => p.evaluate(e => e.checked, await get())
     }
 }
 
@@ -157,19 +159,19 @@ const radioButton = (selector) => {
     return {
         get: get,
         exists: exists(get),
-        isSelected: async() => page.evaluate(e => e.checked, await get())
+        isSelected: async() => p.evaluate(e => e.checked, await get())
     }
 }
 
 const text = (text) => {
     assertType(text);
-    const get = async(element = '*') => $xpath(`//*[text()='${text}']`.replace('*', element));
+    const get = async(e = '*') => $xpath('//' + e + `[text()='${text}']`);
     return { get: get, exists: exists(get), };
 }
 
 const contains = (text) => {
     assertType(text);
-    const get = async(element = '*') => $xpath(`//*[contains(text(),'${text}')]`.replace('*', element));
+    const get = async(e = '*') => $xpath('//' + e + `[contains(text(),'${text}')]`);
     return { get: get, exists: exists(get), };
 }
 
@@ -187,11 +189,11 @@ const getElementByTag = async(selector, tag) => {
 
 const _focus = async(selector) => {
     const e = await getElement(selector);
-    await page.evaluate(e => e.focus(), e);
+    await p.evaluate(e => e.focus(), e);
     return e;
 }
 
-const screenshot = async(options) => page.screenshot(options);
+const screenshot = async(options) => p.screenshot(options);
 
 const isString = (obj) => typeof obj === 'string' || obj instanceof String;
 
@@ -203,7 +205,7 @@ const $xpath = async(selector) => {
 }
 
 const $$xpath = async(selector) => {
-    const arrayHandle = await page.mainFrame()._context.evaluateHandle(selector => {
+    const arrayHandle = await p.mainFrame()._context.evaluateHandle(selector => {
         let node, results = [];
         let result = document.evaluate(selector, document, null, XPathResult.ANY_TYPE, null);
         while (node = result.iterateNext())
@@ -231,9 +233,9 @@ const sleep = (milliseconds) => {
 }
 
 const exists = (get) => {
-    return async() => {
+    return async(intervalTime = 1000, timeout = 10000) => {
         try {
-            await waitUntil(async() => (await get()) != null);
+            await waitUntil(async() => (await get()) != null, intervalTime, timeout);
             return true;
         } catch (e) {
             return false;
@@ -241,21 +243,21 @@ const exists = (get) => {
     }
 };
 
-const waitUntil = async(condition, options = { intervalTime: 1000, timeout: 10000 }) => {
+const waitUntil = async(condition, intervalTime, timeout) => {
     var start = new Date().getTime();
     while (true) {
         try {
             if (await condition()) break;
         } catch (e) {}
-        if ((new Date().getTime() - start) > options.timeout)
-            throw new Error(`waiting failed: timeout ${options.timeout}ms exceeded`);
-        sleep(options.intervalTime);
+        if ((new Date().getTime() - start) > timeout)
+            throw new Error(`waiting failed: timeout ${timeout}ms exceeded`);
+        sleep(intervalTime);
     }
 }
 
 const evaluate = async(selector, callback, ...args) => {
     const e = await getElement(selector);
-    await page.evaluate(callback, e, ...args);
+    await p.evaluate(callback, e, ...args);
     await e.dispose();
 }
 
@@ -264,7 +266,8 @@ const dummy = (e) => e;
 module.exports = {
     openBrowser,
     closeBrowser,
-    meta,
+    browser,
+    page,
     goto,
     reload,
     $,
@@ -294,6 +297,8 @@ module.exports = {
     scrollDown,
     hover,
     screenshot,
+    timeoutSecs: secs => secs * 1000,
+    intervalSecs: secs => secs * 1000,
     to: dummy,
     into: dummy,
 }
