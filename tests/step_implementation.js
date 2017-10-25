@@ -2,9 +2,9 @@
 const assert = require('assert');
 const {
     browser, page, openBrowser, closeBrowser, goto, reload ,$, $$, link, listItem, inputField,
-    textField, image, button, comboBox, checkBox, radioButton, text, contains, click, doubleClick,
-    rightClick, write, press, upload, highlight, scrollTo, scrollRight, scrollLeft, scrollUp,
-    scrollDown, hover, screenshot, timeoutSecs, intervalSecs, waitForNavigation, to, into,
+    textField, image, button, comboBox, checkBox, radioButton, alert, text, contains, click,
+    doubleClick, rightClick, write, press, upload, highlight, scrollTo, scrollRight, scrollLeft,
+    scrollUp, scrollDown, hover, screenshot, timeoutSecs, intervalSecs, waitForNavigation, to, into,
 } = require('./helper');
 
 beforeSuite(async() => openBrowser());
@@ -109,4 +109,12 @@ step('Scroll', async() => {
     await scrollLeft($('#myDIV'), 100);
     await scrollDown($('#myDIV'), 200);
     await scrollUp($('#myDIV'), 100);
+});
+
+step('Alert', async() => {
+    alert('Message 1', async alert => await alert.dismiss());
+    alert('Message 2', async alert => await alert.dismiss());
+
+    await click(button("Alert"), waitForNavigation(false))
+    await click(button("Alert1"), waitForNavigation(false))
 });

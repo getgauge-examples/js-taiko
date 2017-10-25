@@ -163,6 +163,13 @@ const radioButton = (selector) => {
     }
 }
 
+const alert = (message, callback) => {
+    p.on('dialog', async dialog => {
+        if (dialog.type === 'alert' && dialog.message() === message)
+            await callback(dialog);
+    });
+}
+
 const text = (text) => {
     assertType(text);
     const get = async(e = '*') => $xpath('//' + e + `[text()='${text}']`);
@@ -283,6 +290,7 @@ module.exports = {
     comboBox,
     checkBox,
     radioButton,
+    alert,
     text,
     contains,
     click,

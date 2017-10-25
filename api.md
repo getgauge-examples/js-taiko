@@ -32,7 +32,7 @@
 |scrollLeft   |✔     |
 |timeoutSecs  |✔     |
 |intervalSecs |✔     |
-|alert        |✘     |
+|alert        |✔     |
 |drag         |✘     |
 |dragFile     |✘     |
 |toLeftOf     |✘     |
