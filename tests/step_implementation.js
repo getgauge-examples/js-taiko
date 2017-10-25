@@ -1,10 +1,11 @@
 'use strict';
 const assert = require('assert');
 const {
-    browser, page, openBrowser, closeBrowser, goto, reload ,$, $$, link, listItem, inputField,
-    textField, image, button, comboBox, checkBox, radioButton, alert, text, contains, click,
-    doubleClick, rightClick, write, press, upload, highlight, scrollTo, scrollRight, scrollLeft,
-    scrollUp, scrollDown, hover, screenshot, timeoutSecs, intervalSecs, waitForNavigation, to, into,
+    browser, page, openBrowser, closeBrowser, goto, reload, $, $$, link, listItem,
+    inputField, textField, image, button, comboBox, checkBox, radioButton, alert, prompt,
+    confirm, beforeunload, text, contains, click, doubleClick, rightClick, write, press,
+    upload, highlight, scrollTo, scrollRight, scrollLeft, scrollUp, scrollDown, hover,
+    screenshot, timeoutSecs, intervalSecs, waitForNavigation, to, into,
 } = require('./helper');
 
 beforeSuite(async() => openBrowser());

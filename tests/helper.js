@@ -163,12 +163,13 @@ const radioButton = (selector) => {
     }
 }
 
-const alert = (message, callback) => {
-    p.on('dialog', async dialog => {
-        if (dialog.type === 'alert' && dialog.message() === message)
-            await callback(dialog);
-    });
-}
+const alert = (message, callback) => dialog('alert', message, callback);
+
+const prompt = (message, callback) => dialog('prompt', message, callback);
+
+const confirm = (message, callback) => dialog('confirm', message, callback);
+
+const beforeunload = (message, callback) => dialog('beforeunload', message, callback);
 
 const text = (text) => {
     assertType(text);
@@ -202,6 +203,13 @@ const _focus = async(selector) => {
     const e = await element(selector);
     await p.evaluate(e => e.focus(), e);
     return e;
+}
+
+const dialog = (type, message, callback) => {
+    p.on('dialog', async dialog => {
+        if (dialog.type === type && dialog.message() === message)
+            await callback(dialog);
+    });
 }
 
 const screenshot = async(options) => p.screenshot(options);
@@ -291,6 +299,9 @@ module.exports = {
     checkBox,
     radioButton,
     alert,
+    prompt,
+    confirm,
+    beforeunload,
     text,
     contains,
     click,

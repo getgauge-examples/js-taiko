@@ -33,6 +33,9 @@
 |timeoutSecs  |✔     |
 |intervalSecs |✔     |
 |alert        |✔     |
+|prompt       |✔     |
+|confirm      |✔     |
+|beforeunload |✔     |
 |drag         |✘     |
 |dragFile     |✘     |
 |toLeftOf     |✘     |
