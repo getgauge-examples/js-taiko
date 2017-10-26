@@ -13,6 +13,9 @@ const openBrowser = async(options) => {
     p = await b.newPage();
 }
 
+// Please add documentation for every method with usage examples
+// So that help appears during auto completion
+
 const closeBrowser = async(options) => b.close();
 
 const goto = async(url, options) => p.goto(url, options);

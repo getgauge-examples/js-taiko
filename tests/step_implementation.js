@@ -12,6 +12,7 @@ beforeSuite(async() => openBrowser());
 
 afterSuite(async() => closeBrowser());
 
+// The goto dumps a lot of text into the console, make it silent
 step('Navigate to Gauge homepage <query>', async query => goto(query));
 
 step('Display the Gauge logo', async() => assert.ok(await image('Gauge logo').exists()));
@@ -45,7 +46,9 @@ step('Display the official plugins', async() => {
 });
 
 step('Search for Hooks', async() => {
+    // Remove 'placeholder' and use text to match a placeholder
     const field = inputField('placeholder', 'Search docs');
+    // Make into work with a plain string which defaults to a textfield
     await write('Hooks', into(field));
     assert.equal(await field.value(), 'Hooks')
     await press('Enter');
@@ -91,6 +94,7 @@ step('Upload', async() => {
 
 step('Text Field', async() => {
     const field = textField('Username');
+    // Text field should work with placeholder attribute value as this is what is seen on the screen
     await write('Gopher', into(field));
     assert.ok(await field.exists());
     assert.equal(await field.value(), 'Gopher');
@@ -100,12 +104,15 @@ step('Scroll', async() => {
     await scrollTo($('#myDIV'));
 
     // Scrolling the page
+    // All scroll methods need a default value.
+    // Please use the down arrow and set the right default value
     await scrollRight(200);
     await scrollLeft(100);
     await scrollDown(200);
     await scrollUp(100);
 
     // Scrolling a specific element
+    // Should work without passing scroll px value
     await scrollRight($('#myDIV'), 200);
     await scrollLeft($('#myDIV'), 100);
     await scrollDown($('#myDIV'), 200);
