@@ -6,7 +6,7 @@ const {
     confirm, beforeunload, text, contains, click, doubleClick, rightClick, write, press,
     upload, highlight, scrollTo, scrollRight, scrollLeft, scrollUp, scrollDown, hover,
     screenshot, timeoutSecs, intervalSecs, waitForNavigation, to, into,
-} = require('./helper');
+} = require('taiko');
 
 beforeSuite(async() => openBrowser());
 

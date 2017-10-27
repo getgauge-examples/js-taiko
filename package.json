@@ -6,6 +6,6 @@
     "test": "gauge run specs/"
   },
   "dependencies": {
-    "puppeteer": "^0.12.0"
+    "taiko": "0.0.*"
   }
 }
