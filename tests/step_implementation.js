@@ -4,8 +4,8 @@ const {
     browser, page, openBrowser, closeBrowser, goto, reload, $, $$, link, listItem,
     inputField, textField, image, button, comboBox, checkBox, radioButton, alert, prompt,
     confirm, beforeunload, text, contains, click, doubleClick, rightClick, write, press,
-    upload, highlight, scrollTo, scrollRight, scrollLeft, scrollUp, scrollDown, hover,
-    screenshot, timeoutSecs, intervalSecs, waitForNavigation, to, into,
+    upload, highlight, focus, scrollTo, scrollRight, scrollLeft, scrollUp, scrollDown,
+    hover, screenshot, timeoutSecs, intervalSecs, waitForNavigation, to, into,
 } = require('taiko');
 
 beforeSuite(async() => openBrowser());
@@ -90,8 +90,9 @@ step('Upload', async() => {
 });
 
 step('Text Field', async() => {
+    await focus('Username');
+    await write('Gopher', into('Username'));
     const field = textField('Username');
-    await write('Gopher', into(field));
     assert.ok(await field.exists());
     assert.equal(await field.value(), 'Gopher');
 });
@@ -101,14 +102,18 @@ step('Scroll', async() => {
 
     // Scrolling the page
     await scrollRight(200);
+    await scrollLeft();
     await scrollLeft(100);
     await scrollDown(200);
     await scrollUp(100);
+    await scrollUp();
 
     // Scrolling a specific element
     await scrollRight($('#myDIV'), 200);
     await scrollLeft($('#myDIV'), 100);
+    await scrollLeft($('#myDIV'));
     await scrollDown($('#myDIV'), 200);
+    await scrollUp($('#myDIV'));
     await scrollUp($('#myDIV'), 100);
 });
 
