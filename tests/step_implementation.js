@@ -1,7 +1,7 @@
 'use strict';
 const assert = require('assert');
 const {
-    browser, page, openBrowser, closeBrowser, goto, reload, $, $$, link, listItem,
+    browser, page, openBrowser, closeBrowser, goto, reload, $, link, listItem,
     inputField, textField, image, button, comboBox, checkBox, radioButton, alert, prompt,
     confirm, beforeunload, text, contains, click, doubleClick, rightClick, write, press,
     upload, highlight, focus, scrollTo, scrollRight, scrollLeft, scrollUp, scrollDown,
@@ -28,7 +28,7 @@ step('Go to plugins page', async() => {
     assert.ok(await link('Get Started').exists());
     assert.ok(await link(text('Get Started')).exists());
     assert.ok(await link('Star').exists());
-    assert.ok(await $$(`//a[text()='Get Started']`).exists());
+    assert.ok(await $(`//a[text()='Get Started']`).exists());
 
     await hover('Get Started');
     await click('Plugins');
