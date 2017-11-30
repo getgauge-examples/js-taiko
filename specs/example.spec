@@ -5,7 +5,7 @@ This is an executable specification file. This file follows markdown syntax. Eve
 To execute this specification, use
 	npm test
 
-* Navigate to Gauge homepage "https://getgauge.io"
+* Navigate to "https://getgauge.io"
 
 Logo
 ----
