@@ -8,7 +8,7 @@ const {
     hover, screenshot, timeoutSecs, intervalSecs, waitForNavigation, to, into,
 } = require('taiko');
 
-beforeSuite(async() => openBrowser());
+beforeSuite(async() => openBrowser({dumpio: true}));
 
 afterSuite(async() => closeBrowser());
 
