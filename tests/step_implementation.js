@@ -2,13 +2,13 @@
 const assert = require('assert');
 const {
     browser, page, openBrowser, closeBrowser, goto, reload, $, link, listItem,
-    inputField, textField, image, button, comboBox, checkBox, radioButton, alert, prompt,
-    confirm, beforeunload, text, contains, click, doubleClick, rightClick, write, press,
+    inputField, fileField, textField, image, button, comboBox, checkBox, radioButton, alert,
+    prompt, confirm, beforeunload, text, contains, click, doubleClick, rightClick, write, press,
     upload, highlight, focus, scrollTo, scrollRight, scrollLeft, scrollUp, scrollDown,
     hover, screenshot, timeoutSecs, intervalSecs, waitForNavigation, to, into,
 } = require('taiko');
 
-beforeSuite(async() => openBrowser({dumpio: true}));
+beforeSuite(async() => openBrowser({args: ['--no-sandbox', '--disable-setuid-sandbox']}));
 
 afterSuite(async() => closeBrowser());
 
@@ -84,7 +84,7 @@ step('Radio Button', async() => {
 });
 
 step('Upload', async() => {
-    const field = inputField('id', 'file');
+    const field = fileField('File');
     await upload('file.txt', to(field));
     assert.ok((await field.value()).endsWith('file.txt'));
 });
