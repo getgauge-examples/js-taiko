@@ -4,7 +4,7 @@ const {
     browser, page, openBrowser, closeBrowser, goto, reload, $, link, listItem,
     inputField, fileField, textField, image, button, comboBox, checkBox, radioButton, alert,
     prompt, confirm, beforeunload, text, contains, click, doubleClick, rightClick, write, press,
-    upload, highlight, focus, scrollTo, scrollRight, scrollLeft, scrollUp, scrollDown,
+    attach, highlight, focus, scrollTo, scrollRight, scrollLeft, scrollUp, scrollDown,
     hover, screenshot, timeoutSecs, intervalSecs, waitForNavigation, to, into,
 } = require('taiko');
 
@@ -83,9 +83,9 @@ step('Radio Button', async() => {
     assert.ok(await button.isSelected());
 });
 
-step('Upload', async() => {
+step('Attach file', async() => {
     const field = fileField('File');
-    await upload('file.txt', to(field));
+    await attach('file.txt', to(field));
     assert.ok((await field.value()).endsWith('file.txt'));
 });
 

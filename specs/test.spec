@@ -18,10 +18,10 @@ Radio Button
 
 * Radio Button
 
-Upload
-------
+Attach file
+-----------
 
-* Upload
+* Attach file
 
 Text Field
 ----------
