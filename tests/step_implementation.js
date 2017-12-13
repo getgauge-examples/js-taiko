@@ -22,7 +22,7 @@ step('Display the sub title <title>', async title => assert.ok(await text(title)
 
 step('Go to Gauge documentation page', async() => click($(`//*[text()='Documentation']`)));
 
-step('Display the Gauge version', async() => assert.ok(await contains('0.9.3').exists()));
+step('Display the Gauge version', async() => assert.ok(await contains('0.9.4').exists()));
 
 step('Go to plugins page', async() => {
     assert.ok(await link('Get Started').exists());
