@@ -14,7 +14,8 @@ Logo
 Get Started
 -----------
 * Go to Gauge get started page
-* Display the sub title "Choose your OS & download"
+* Click on Zip tab
+* Check "Create a new project" exists
 
 Documentation
 -------------
@@ -24,14 +25,16 @@ Documentation
 Plugins
 -------
 * Go to plugins page
-* Display the official plugins
+* Display the language plugins
+
+IDE Plugins
+-----------
+* Go to Gauge documentation page
+* Go to plugins page
+* Click on IDE plugins
+* Display the IDE plugins
 
 Documentation Search
 --------------------
 * Go to Gauge documentation page
 * Search for Hooks
-
-IDE Plugins
------------
-* Go to Gauge documentation page
-* Display the IDE plugins
