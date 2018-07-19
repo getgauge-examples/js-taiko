@@ -1,7 +1,7 @@
 API
 ===
 
-* Navigate to "https://getgauge-examples.github.io/js_puppeteer"
+* Navigate to "https://getgauge-examples.github.io/js-taiko"
 
 Combo Box
 ---------

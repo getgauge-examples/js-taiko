@@ -72,14 +72,14 @@ step('Combo Box', async() => {
 step('Check Box', async() => {
     const box = checkBox('Vehicle');
     assert.ok(await box.exists());
-    await click(box, waitForNavigation(false));
+    await checkBox('Vehicle').check();
     assert.ok(await box.isChecked());
 });
 
 step('Radio Button', async() => {
     const button = radioButton('Female');
     assert.ok(await button.exists());
-    await click(button, waitForNavigation(false));
+    await button.select();
     assert.ok(await button.isSelected());
 });
 
