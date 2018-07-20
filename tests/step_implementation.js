@@ -46,7 +46,7 @@ step('Display the language plugins', async() => {
 
 step('Search for Hooks', async() => {
     const field = inputField('placeholder', 'Search Docs');
-    await write('Hooks', into(field));
+    await write('Hooks', into(field),{delay:100});
     assert.equal(await field.value(), 'Hooks');
     await press('Enter');
     assert.ok(await link('CSharp').exists());
