@@ -20,7 +20,6 @@ Get Started
 Documentation
 -------------
 * Go to Gauge documentation page
-* Display the Gauge version
 
 Plugins
 -------
