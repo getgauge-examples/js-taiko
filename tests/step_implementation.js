@@ -10,6 +10,8 @@ const {
 
 beforeSuite(async() => openBrowser());
 
+afterSuite(async() => closeBrowser());
+
 step('Navigate to <url>', async url => goto(url));
 
 step('Display the Gauge logo', async() => assert.ok(await link('Gauge').exists()));
