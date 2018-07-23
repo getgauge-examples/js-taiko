@@ -8,7 +8,7 @@ const {
     hover, screenshot, timeoutSecs, intervalSecs, waitForNavigation, to, into,
 } = require('taiko');
 
-beforeSuite(async() => openBrowser({args: ['--no-sandbox', '--disable-setuid-sandbox']}));
+beforeSuite(async() => openBrowser());
 
 afterSuite(async() => closeBrowser());
 
