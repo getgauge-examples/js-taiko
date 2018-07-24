@@ -5,10 +5,10 @@ const {
     inputField, fileField, textField, image, button, comboBox, checkBox, radioButton, alert,
     prompt, confirm, beforeunload, text, contains, click, doubleClick, rightClick, write, press,
     attach, highlight, focus, scrollTo, scrollRight, scrollLeft, scrollUp, scrollDown,
-    hover, screenshot, timeoutSecs, intervalSecs, waitForNavigation, to, into,
+    hover, screenshot, timeoutSecs, intervalSecs, waitForNavigation, to, into
 } = require('taiko');
 
-beforeSuite(async() => openBrowser({args: ['--no-sandbox', '--disable-setuid-sandbox']}));
+beforeSuite(async() => openBrowser({headless:false}));
 
 afterSuite(async() => closeBrowser());
 
