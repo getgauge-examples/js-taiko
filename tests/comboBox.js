@@ -8,6 +8,5 @@ const {
 
 step("Select <value> of Combo Box near <table>", async function(value, table) {
     var element = _selectors.getElement(table);
-    //console.log(element)
     await comboBox(near(element)).select("‪हिन्दी‬");
 });

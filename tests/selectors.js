@@ -1,25 +1,40 @@
 'use strict';
 const {
-    link, comboBox,inputField
+    link, comboBox,inputField,text
 } = require('taiko');
 
 function getElementWithSelector(element,selector){
-    console.log(element)
-    console.log(selector)
-    var selectedItem =  JSON.parse(selector)
+    var selectedElement = null
+    var selectedItem
+    try{
+        selectedItem =  JSON.parse(selector)
+    }
+    catch(err)
+    {
+        selectedItem = selector
+    }
     switch(element){
         case "link":
-            return link(selectedItem)
+            selectedElement = link(selectedItem)
+            break;
         case "inputField":
-            return inputField(selectedItem)
+            selectedElement = inputField(selectedItem)
+            break;
+        case "text":
+            selectedElement = text(selectedItem)
+            break;
     }
-    return null
+    return selectedElement
 }
 
 function getElement(table){
     var referenceElement = null
     table.rows.forEach(function (row) {
         referenceElement = getElementWithSelector(row.cells[0],row.cells[1])
+        if(row.cells[2])
+        {
+            return referenceElement[row.cells[2]]()
+        }
     })
     return referenceElement
 }
