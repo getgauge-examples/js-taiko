@@ -18,7 +18,7 @@ step('Display the Gauge logo', async() => assert.ok(await link('Gauge').exists()
 
 step('Go to Gauge get started page', async() => click('Get Started'));
 
-step("Click on Zip tab", async () => assert.ok(await click('Zip')));
+step("Click on Zip tab", async () => assert.ok(await click('ZIP')));
 
 step("Check <heading> exists", async (heading) => assert.ok(await text(heading).exists()));
 
