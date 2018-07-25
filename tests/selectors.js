@@ -1,6 +1,6 @@
 'use strict';
 const {
-    link, comboBox,inputField,text
+    link, comboBox,inputField,text,$
 } = require('taiko');
 
 function getElementWithSelector(element,selector){
@@ -22,6 +22,9 @@ function getElementWithSelector(element,selector){
             break;
         case "text":
             selectedElement = text(selectedItem)
+            break;
+        case "$":
+            selectedElement = $(selectedItem)
             break;
     }
     return selectedElement
