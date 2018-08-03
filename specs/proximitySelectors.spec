@@ -10,8 +10,6 @@
 
 ## Near by
 
-tags: knownIssue
-
 * Navigate to "google.com"
 * Click "I'm Feeling Lucky"
 * Click "About"
@@ -20,6 +18,7 @@ tags: knownIssue
    |Type      |Selector                        |
    |----------|--------------------------------|
    |inputField|{"placeholder":"Search Doodles"}|
+* Click "Doodles संग्रह"
 
 ## Above
 
