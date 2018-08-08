@@ -49,4 +49,4 @@
    |----|------------|
    |$   |.github_star|
 
-* Assert title to be "Open Source Test Automation Framework | Gauge" 
+* Assert title to be "Supported Plugins | Gauge" 
