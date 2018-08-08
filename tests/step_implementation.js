@@ -5,7 +5,7 @@ const {
     inputField, fileField, textField, image, button, comboBox, checkBox, radioButton, alert,
     prompt, confirm, beforeunload, text, contains, click, doubleClick, rightClick, write, press,
     attach, highlight, focus, scrollTo, scrollRight, scrollLeft, scrollUp, scrollDown,
-    hover, screenshot, timeoutSecs, intervalSecs, waitForNavigation, to, into
+    hover, screenshot, timeoutSecs, intervalSecs, waitForNavigation, to, into, dismiss, accept
 } = require('taiko');
 
 beforeSuite(async() => openBrowser({args: ['--no-sandbox', '--disable-setuid-sandbox']}));
@@ -118,10 +118,9 @@ step('Scroll', async() => {
 });
 
 step('Alert', async() => {
-    //TODO: alert.dismiss() is not available in taiko that was a puppeteer's api, should be implemented
-    // alert('Message 1', async alert => await alert.dismiss());
-    // alert('Message 2', async alert => await alert.dismiss());
+    alert('Message 1', async () => await dismiss());
+    alert('Message 2', async () => await accept());
 
-    // await click(button("Alert"), waitForNavigation(false))
-    // await click(button("Alert1"), waitForNavigation(false))
+    await click(button("Alert"));
+    await click(button("Alert1"));
 });
