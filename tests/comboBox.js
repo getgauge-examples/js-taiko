@@ -8,5 +8,6 @@ const {
 
 step("Select <value> of Combo Box near <table>", async function(value, table) {
     var element = _selectors.getElement(table);
+    assert.equal((await element.exists()).description,'Exists');
     await comboBox(near(element)).select("‪हिन्दी‬");
 });
