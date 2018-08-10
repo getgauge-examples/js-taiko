@@ -38,11 +38,11 @@
 ## Right Of
 
 * Navigate to "https://gauge.org/index.html"
-* Assert ok 
+* Assert Exists
 
-   |Type|Selector               |Method|
-   |----|-----------------------|------|
-   |text|{"class":"github_star"}|exists|
+   |Type|Selector    |Method|
+   |----|------------|------|
+   |$   |.github_star|exists|
 * Click link to right of
 
    |Type|Selector    |

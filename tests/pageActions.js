@@ -1,6 +1,6 @@
 var _selectors = require('./selectors')
 const {
-    scrollTo,scrollUp,press
+    scrollTo,scrollUp,press,highlight
 } = require('taiko');
 
 step("Scroll to <table>", async function(table) {
@@ -13,4 +13,8 @@ step("Scroll up <table>", async function(table) {
 
 step("Press <key>", async function(key) {
 	await press(key);
+});
+
+step("Highlight <selector>",async function(selector){
+	await highlight(selector);
 });
