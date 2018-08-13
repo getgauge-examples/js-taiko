@@ -1,7 +1,6 @@
 # Alert
 
 ## Should be able to accept a dialog box
-tags: knownIssue
 
 * Navigate to "https://react-shopping-cart-67954.firebaseapp.com/"
 * Click "M"
