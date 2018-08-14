@@ -1,7 +1,6 @@
 #Browser Action
 
 ##Switch To
-tags: knownIssue
 * Navigate to "https://gauge.org"
 * Click link to left of
 
