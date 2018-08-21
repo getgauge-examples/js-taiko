@@ -1,18 +1,17 @@
 #Browser Action
 
 ##Switch To
-* Navigate to "https://gauge.org"
-* Click link to left of
+* Navigate to "https://news.google.com/"
+* Click link below
 
    |Type|Selector    |
    |----|------------|
-   |text|Plugins     |
+   |link|Headlines   |
 
-* Highlight "Features"
-* Switch to tab with title "Open Source Test Automation Framework | Gauge"
+* Switch to tab with title "Google News"
 * Assert Exists
 
-   |Type|Selector    |
-   |----|------------|
-   |$   |.github_star|
+   |Type|Selector         |
+   |----|-----------------|
+   |link|More Headlines   |
 
