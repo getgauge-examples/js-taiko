@@ -1,7 +1,7 @@
 API
 ===
 
-* Navigate to "https://getgauge-examples.github.io/js-taiko"
+* Navigate to "https://getgauge-examples.github.io/js-taiko" with timeout "5000" ms
 
 Combo Box
 ---------

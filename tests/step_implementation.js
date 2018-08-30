@@ -12,7 +12,9 @@ beforeSuite(async() => openBrowser({args: ['--no-sandbox', '--disable-setuid-san
 
 afterSuite(async() => closeBrowser());
 
-step('Navigate to <url>', async url => goto(url));
+step('Navigate to <url>', async url => await goto(url));
+
+step('Navigate to <url> with timeout <timeout> ms', async (url,timeout) => await goto(url,{timeout:timeout}));
 
 step('Display the Gauge logo', async() => assert.ok(await link('Gauge').exists()));
 

@@ -1,7 +1,7 @@
 #Browser Action
 
 ##Switch To
-* Navigate to "https://news.google.com/"
+* Navigate to "https://news.google.com/" with timeout "5000" ms
 * Click link below
 
    |Type|Selector    |
