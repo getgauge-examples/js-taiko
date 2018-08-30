@@ -9,11 +9,10 @@
    |link|Roadmap |
 
 ## Near by
-tags: knownIssue
 
 * Navigate to "google.com"
 * Click "I'm Feeling Lucky"
-* Click "About"
+* Click "About" with timeout "10000"
 * Select "हिन्दी" of Combo Box near 
 
    |Type      |Selector                        |
