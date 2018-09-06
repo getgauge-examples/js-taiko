@@ -5,7 +5,7 @@ This is an executable specification file. This file follows markdown syntax. Eve
 To execute this specification, use
 	npm test
 
-* Navigate to "https://gauge.org"
+* Navigate to "https://gauge.org" with timeout "10000" ms
 
 Logo
 ----
