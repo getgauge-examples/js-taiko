@@ -18,7 +18,7 @@ step('Navigate to <url> with timeout <timeout> ms', async (url,timeout) => await
 
 step('Display the Gauge logo', async() => assert.ok(await link('Gauge').exists()));
 
-step('Go to Gauge get started page', async() => click('Get Started'));
+step('Go to Gauge get started page', async() => await click('Get Started'));
 
 step("Click on Zip tab", async () => assert.ok(await click('ZIP')));
 
