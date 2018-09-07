@@ -1,17 +1,17 @@
 #Browser Action
 
 ##Switch To
-* Navigate to "https://news.google.com/" with timeout "5000" ms
-* Click link below
+* Navigate to "https://gauge.org"
+* Click link to left of
 
    |Type|Selector    |
    |----|------------|
-   |link|Headlines   |
+   |text|Plugins     |
 
-* Switch to tab with title "Google News"
+* Highlight "Features"
+* Switch to tab with title "Open Source Test Automation Framework | Gauge"
 * Assert Exists
 
-   |Type|Selector         |
-   |----|-----------------|
-   |link|More Headlines   |
-
+   |Type|Selector    |
+   |----|------------|
+   |$   |.github_star|
