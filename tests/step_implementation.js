@@ -8,9 +8,9 @@ const {
     hover, screenshot, timeoutSecs, intervalSecs, waitForNavigation, to, into, dismiss, accept
 } = require('taiko');
 
-beforeSuite(async() => openBrowser({args: ['--no-sandbox', '--disable-setuid-sandbox']}));
+beforeScenario(async() => openBrowser({args: ['--no-sandbox', '--disable-setuid-sandbox']}));
 
-afterSuite(async() => closeBrowser());
+afterScenario(async() => closeBrowser());
 
 step('Navigate to <url>', async url => await goto(url));
 
