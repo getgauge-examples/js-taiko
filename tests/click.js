@@ -36,7 +36,7 @@ step("Click link to right of <table>", async function(table) {
 });
 
 step("Click link to left of <table>", async function(table){
-    await click(link(toLeftOf(_selectors.getElement(table))));
+    await click(link(toLeftOf(_selectors.getElement(table))),{waitForStart:2000});
 });
 
 step("Click link below <table>", async function(table) {
