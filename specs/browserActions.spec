@@ -8,7 +8,6 @@
    |----|------------|
    |text|Plugins     |
 
-* Highlight "Features"
 * Switch to tab with title "Open Source Test Automation Framework | Gauge"
 * Assert Exists
 
