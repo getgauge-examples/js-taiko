@@ -1,8 +1,8 @@
 # Proximity Selectors
 ## Below
 
-* Navigate to "https://gauge.org"
 * Intercept Google Analytics
+* Navigate to "https://gauge.org"
 * Click link "Gauge Commmands" below 
 
    |Type|Selector|
@@ -24,8 +24,8 @@ tags: knownIssue
 
 ## Above
 
-* Navigate to "https://gauge.org"
 * Intercept Google Analytics
+* Navigate to "https://gauge.org"
 * Click link "Blog"
 * Click image above 
 
@@ -40,8 +40,8 @@ tags: knownIssue
 
 ## Right Of
 
-* Navigate to "https://gauge.org/index.html"
 * Intercept Google Analytics
+* Navigate to "https://gauge.org/index.html"
 * Assert Exists
 
    |Type|Selector    |Method|

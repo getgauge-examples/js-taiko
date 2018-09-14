@@ -1,8 +1,8 @@
 # Selectors
 ## Contains
 
-* Navigate to "https://gauge.org/index.html"
 * Intercept Google Analytics
+* Navigate to "https://gauge.org/index.html"
 * Click link "Documentation"
 * Focus 
 

@@ -1,8 +1,8 @@
 #Browser Action
 
-##Switch To
-* Navigate to "https://gauge.org"
+## Switch To
 * Intercept Google Analytics
+* Navigate to "https://gauge.org"
 * Click link to left of
 
    |Type|Selector    |
@@ -15,3 +15,9 @@
    |Type|Selector    |
    |----|------------|
    |$   |.github_star|
+
+## Open/Close Tab
+* Intercept Google Analytics
+* Navigate to "google.com"
+* Open Tab "https://getgauge.io"
+* Close Tab "https://gauge.org/index.html"
