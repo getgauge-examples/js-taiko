@@ -5,7 +5,7 @@ const {
     inputField, fileField, textField, image, button, comboBox, checkBox, radioButton, alert,
     prompt, confirm, beforeunload, text, contains, click, doubleClick, rightClick, write, press,
     attach, highlight, focus, scrollTo, scrollRight, scrollLeft, scrollUp, scrollDown,
-    hover, screenshot, timeoutSecs, intervalSecs, waitForNavigation, to, into, dismiss, accept
+    hover, screenshot, timeoutSecs, intervalSecs, waitForNavigation, to, into, dismiss, accept,intercept
 } = require('taiko');
 
 beforeScenario(async() => openBrowser({args: ['--no-sandbox', '--disable-setuid-sandbox']}));
@@ -125,4 +125,9 @@ step('Alert', async() => {
 
     await click(button("Alert"));
     await click(button("Alert1"));
+});
+
+step("Intercept Google Analytics", async function() {
+	await intercept("https://www.googletagmanager.com/gtm.js?id=GTM-5C33ML2");
+    await intercept("https://www.google-analytics.com/analytics.j");
 });

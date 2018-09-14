@@ -2,6 +2,7 @@
 ## Contains
 
 * Navigate to "https://gauge.org/index.html"
+* Intercept Google Analytics
 * Click link "Documentation"
 * Focus 
 

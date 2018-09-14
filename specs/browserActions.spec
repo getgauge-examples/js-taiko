@@ -2,6 +2,7 @@
 
 ##Switch To
 * Navigate to "https://gauge.org"
+* Intercept Google Analytics
 * Click link to left of
 
    |Type|Selector    |

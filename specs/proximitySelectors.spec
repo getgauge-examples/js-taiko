@@ -2,6 +2,7 @@
 ## Below
 
 * Navigate to "https://gauge.org"
+* Intercept Google Analytics
 * Click link "Gauge Commmands" below 
 
    |Type|Selector|
@@ -24,6 +25,7 @@ tags: knownIssue
 ## Above
 
 * Navigate to "https://gauge.org"
+* Intercept Google Analytics
 * Click link "Blog"
 * Click image above 
 
@@ -39,6 +41,7 @@ tags: knownIssue
 ## Right Of
 
 * Navigate to "https://gauge.org/index.html"
+* Intercept Google Analytics
 * Assert Exists
 
    |Type|Selector    |Method|
