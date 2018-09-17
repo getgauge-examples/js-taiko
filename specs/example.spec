@@ -7,6 +7,7 @@ To execute this specification, use
 
 * Intercept Google Analytics
 * Navigate to "https://gauge.org" with timeout "10000" ms
+
 Logo
 ----
 * Display the Gauge logo
