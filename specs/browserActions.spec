@@ -19,5 +19,5 @@
 ## Open/Close Tab
 * Intercept Google Analytics
 * Navigate to "google.com"
-* Open Tab "https://getgauge.io"
-* Close Tab "https://gauge.org/index.html"
+* Open Tab "https://gauge.org"
+* Close Tab "https://gauge.org"
