@@ -3,11 +3,11 @@
 
 * Intercept Google Analytics
 * Navigate to "https://gauge.org"
-* Click link "Gauge Commmands" below 
+* Click link "Insights" below 
 
-   |Type|Selector|
-   |----|--------|
-   |link|Roadmap |
+   |Type|Selector       |
+   |----|---------------|
+   |link|Gauge Commmands|
 
 ## Near by
 tags: knownIssue
