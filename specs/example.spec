@@ -6,7 +6,7 @@ To execute this specification, use
 	npm test
 
 * Intercept Google Analytics
-* Navigate to "https://gauge.org" with timeout "10000" ms
+* Navigate to "https://gauge.org"
 
 Logo
 ----
