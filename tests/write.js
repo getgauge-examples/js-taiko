@@ -8,5 +8,5 @@ step("Write <text>", async function(text) {
 });
 
 step("Focus <table>", async function(table) {
-	return focus(_selectors.getElement(table))
+	return await focus(_selectors.getElement(table))
 });

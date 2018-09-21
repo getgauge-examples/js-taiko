@@ -8,9 +8,9 @@ const {
     hover, screenshot, timeoutSecs, intervalSecs, waitForNavigation, to, into, dismiss, accept,intercept
 } = require('taiko');
 
-beforeScenario(async() => openBrowser({args: ['--no-sandbox', '--disable-setuid-sandbox']}));
+beforeScenario(async() => await openBrowser({args: ['--no-sandbox', '--disable-setuid-sandbox']}));
 
-afterScenario(async() => closeBrowser());
+afterScenario(async() => await closeBrowser());
 
 step('Navigate to <url>', async url => await goto(url));
 
@@ -24,7 +24,7 @@ step("Click on Zip tab", async () => assert.ok(await click('ZIP')));
 
 step("Check <heading> exists", async (heading) => assert.ok(await text(heading).exists()));
 
-step('Go to Gauge documentation page', async() => click($(`//*[text()='Documentation']`)));
+step('Go to Gauge documentation page', async() => await click($(`//*[text()='Documentation']`)));
 
 step('Display quick start', async() => assert.ok(await contains('quick start').exists()));
 

@@ -32,7 +32,7 @@ tags: knownIssue
    |Type|Selector       |
    |----|---------------|
    |text|Zabil Maliackal|
-* Assert ok 
+* Assert Exists 
 
    |Type|Selector          |Method|
    |----|------------------|------|
