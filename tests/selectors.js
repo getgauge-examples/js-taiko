@@ -1,6 +1,6 @@
 'use strict';
 const {
-    link, comboBox,inputField,text,$
+    link, comboBox,inputField,text,$,contains
 } = require('taiko');
 
 function getElementWithSelector(element,selector){
@@ -21,6 +21,12 @@ function getElementWithSelector(element,selector){
             selectedElement = inputField(selectedItem)
             break;
         case "text":
+            if(selectedItem.startsWith("contains"))
+            {
+                var result = selectedItem.substring(10,selectedItem.length-2)
+                selectedElement = text(contains(result))
+                break
+            }
             selectedElement = text(selectedItem)
             break;
         case "$":
