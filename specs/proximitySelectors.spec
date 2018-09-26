@@ -10,6 +10,7 @@
    |link|Gauge Commmands|
 
 ## Near by
+tags: knownIssue
 
 * Navigate to "google.com"
 * Click "I'm Feeling Lucky"
