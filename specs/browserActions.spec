@@ -34,3 +34,19 @@
 * Close Tab
 * Close Tab
 * Switch to tab with title "Google"
+
+## Reload
+tags: knownIssue
+* Navigate to "https://react-shopping-cart-67954.firebaseapp.com/"
+* Select "Lowest to highest" of Combo Box to right of
+
+   |Type|Selector            |
+   |----|--------------------|
+   |text|contains("Order by")|
+* Reload the page
+
+Todo - this requires the new API
+Assert that value of Combo Box to right of
+   |Type|Selector            |
+   |----|--------------------|
+   |text|contains("Order by")|

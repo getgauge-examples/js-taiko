@@ -1,6 +1,7 @@
 const {
-    switchTo,openTab,closeTab
+    switchTo,openTab,closeTab,reload,goto
 } = require('taiko');
+const cwd = process.cwd();
 
 step("Switch to tab with title <title>",async function(title){
 	await switchTo(title);
@@ -20,4 +21,12 @@ step("Open Tab <arg0> with timeout <time>", async function(url, time) {
 
 step("Close Tab", async function() {
 	await closeTab()
+});
+
+step("Reload the page", async function() {
+	await reload();
+});
+
+step("Navigate to file with relative Path <filePath>", async function(filePath) {
+	await goto("file:///"+cwd+filePath)
 });

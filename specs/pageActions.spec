@@ -27,3 +27,13 @@
    |text|flow    |
 * Click link "Completed"
 * Click button "Clear completed"
+
+## Right Click
+
+* Navigate to file with relative Path "/specs/rightClick.html"
+* Right click
+
+   |Type|Selector       |
+   |----|---------------|
+   |text|Someelement    |
+* Click "Share On Facebook"
