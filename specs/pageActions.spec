@@ -16,8 +16,6 @@
 
 ## Write, Press, Click
 
-tags: knownIssue
-
 * Navigate to "http://todomvc.com/examples/react/#/"
 * Write "flow"
 * Press "Enter"
@@ -28,4 +26,4 @@ tags: knownIssue
    |----|--------|
    |text|flow    |
 * Click link "Completed"
-* Click link "Clear completed"
+* Click button "Clear completed"
