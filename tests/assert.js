@@ -16,3 +16,7 @@ step("Assert title to be <userTitle>", async function(userTitle) {
 step("Assert Exists <table>", async function(table){
 	assert.equal("Exists",(await _selectors.getElement(table).exists()).description);
 });
+
+step("assert text to be <text> <table>", async function(text, table) {
+	assert.equal(await _selectors.getElement(table).text(),text)
+});

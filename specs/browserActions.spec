@@ -36,17 +36,10 @@
 * Switch to tab with title "Google"
 
 ## Reload
-tags: knownIssue
-* Navigate to "https://react-shopping-cart-67954.firebaseapp.com/"
-* Select "Lowest to highest" of Combo Box to right of
-
-   |Type|Selector            |
-   |----|--------------------|
-   |text|contains("Order by")|
+* Navigate to "https://ahfarmer.github.io/calculator/"
+* Click button "8"
 * Reload the page
-
-Todo - this requires the new API
-Assert that value of Combo Box to right of
-   |Type|Selector            |
-   |----|--------------------|
-   |text|contains("Order by")|
+* assert text to be "0\n"
+   |Type|Selector          |
+   |----|------------------|
+   |$   |.component-display|
