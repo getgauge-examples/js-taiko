@@ -37,3 +37,13 @@
    |----|---------------|
    |text|Someelement    |
 * Click "Share On Facebook"
+
+## Hover
+* Navigate to "http://react-compare-app.surge.sh/"
+* Hover on element
+
+   |Type|Selector        |
+   |----|----------------|
+   |$   |".image_overlay"|
+* Click "Compare"
+* Click "Remove"
