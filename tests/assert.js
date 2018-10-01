@@ -20,3 +20,7 @@ step("Assert Exists <table>", async function(table){
 step("assert text to be <text> <table>", async function(text, table) {
 	assert.equal(await _selectors.getElement(table).text(),text)
 });
+
+step("Assert text is not empty <table>", async function(table) {
+	assert.ok(await _selectors.getElement(table).text() != '');
+});
