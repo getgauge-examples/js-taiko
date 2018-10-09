@@ -39,7 +39,7 @@
 * Navigate to "https://ahfarmer.github.io/calculator/"
 * Click button "8"
 * Reload the page
-* assert text to be "0\n"
+* assert text to be "0"
    |Type|Selector          |
    |----|------------------|
    |$   |.component-display|

@@ -3,9 +3,10 @@
   "version": "0.0.1",
   "description": "Starter template for writing JavaScript tests for Gauge",
   "scripts": {
+    "preinstall": "npm install /Users/nivedhasenthil/go/src/github.com/getgauge/taiko/",
     "test": "gauge run specs/"
   },
   "dependencies": {
-    "taiko": "git+https://github.com/getgauge/taiko.git"
+    "taiko": "file:../../go/src/github.com/getgauge/taiko"
   }
 }
