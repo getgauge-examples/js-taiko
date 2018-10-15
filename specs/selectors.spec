@@ -13,13 +13,13 @@
 * Click an element that contains "Taking"
 
 ## Id
-
+tags: knownIssue
 * Navigate to "google.com"
 * Click "I'm Feeling Lucky"
 * Click "About"
 * Select "हिन्दी" of Combo Box near 
 
-   |Type      |Selector            |
-   |----------|--------------------|
+   |Type      |Selector             |
+   |----------|---------------------|
    |inputField|{"id":"searchinput"}|
 * Click "Doodles संग्रह"
