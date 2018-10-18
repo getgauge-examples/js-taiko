@@ -138,3 +138,11 @@ step("Intercept Google Analytics", async function() {
 	await intercept("https://www.googletagmanager.com/gtm.js?id=GTM-5C33ML2");
     await intercept("https://www.google-analytics.com/analytics.js");
 });
+
+step("Respond to <url> with <respomnseBody>", async function(url, respomnseBody) {
+	await intercept(url, {body: respomnseBody })
+});
+
+step("Respond to <url> with json <jsonString>", async function(url, jsonString) {
+	await intercept(url, {body: JSON.parse(jsonString) })
+});
