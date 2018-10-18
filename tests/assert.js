@@ -2,7 +2,7 @@ const assert = require('assert');
 var _selectors = require('./selectors')
 
 const {
-    title
+    title, text
 } = require('taiko');
 
 step("Assert ok <table>", async function(table) {
@@ -23,4 +23,9 @@ step("assert text to be <text> <table>", async function(text, table) {
 
 step("Assert text is not empty <table>", async function(table) {
 	assert.ok(await _selectors.getElement(table).text() != '');
+});
+
+step("Assert text <content> exists on the page.", async function(content) {
+	const newLocal = (await text(content).exists());
+	assert.equal(newLocal.description, 'Exists');
 });
