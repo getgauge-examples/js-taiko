@@ -33,9 +33,9 @@ tags: knownIssue
    |text|Zabil Maliackal|
 * Assert Exists 
 
-   |Type|Selector          |Method|
-   |----|------------------|------|
-   |text|Why we built Gauge|exists|
+   |Type    |Selector          |Method|
+   |--------|------------------|------|
+   |contains|Introducing Taiko |exists|
 
 ## Right Of
 
