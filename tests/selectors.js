@@ -14,6 +14,9 @@ function getElementWithSelector(element,selector){
         selectedItem = selector
     }
     switch(element){
+        case "contains":
+            selectedElement = contains(selectedItem)
+            break;
         case "link":
             selectedElement = link(selectedItem)
             break;
