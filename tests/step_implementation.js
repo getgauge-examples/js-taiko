@@ -17,6 +17,10 @@ beforeScenario(async() => await openBrowser({args: [
         '--no-zygote']}
 ));
 
+gauge.screenshotFn = async function () {
+    return await screenshot({encoding: "base64"});
+};
+
 afterScenario(async() => await closeBrowser());
 
 step('Navigate to <url>', async url => await goto(url));
