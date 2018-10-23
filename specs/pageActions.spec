@@ -39,6 +39,7 @@
 * Click "Share On Facebook"
 
 ## Hover
+tags: knownIssue-windows
 * Navigate to "http://react-compare-app.surge.sh/"
 * Hover on element
 
