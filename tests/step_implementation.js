@@ -152,5 +152,5 @@ step("Respond to <url> with json <jsonString>", async function(url, jsonString) 
 });
 
 step("Take screenshot", async function() {
-	await gauge.screenshot();
+	await screenshot({path:"./reports/html-report/screenshot.png"});
 });
