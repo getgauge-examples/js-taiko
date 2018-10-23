@@ -150,7 +150,3 @@ step("Respond to <url> with <respomnseBody>", async function(url, respomnseBody)
 step("Respond to <url> with json <jsonString>", async function(url, jsonString) {
 	await intercept(url, {body: JSON.parse(jsonString) })
 });
-
-step("Take screenshot", async function() {
-	await screenshot({path:"./reports/html-report/screenshot.png"});
-});

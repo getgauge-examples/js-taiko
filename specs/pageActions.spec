@@ -46,5 +46,4 @@
    |----|----------------|
    |$   |".image_overlay"|
 * Click "Compare"
-* Take screenshot
 * Click "Remove"
