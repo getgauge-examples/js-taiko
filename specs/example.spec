@@ -15,8 +15,8 @@ Logo
 Get Started
 -----------
 * Go to Gauge get started page
-* Click on Zip tab
-* Check "Create a new project" exists
+* Click on Quick Install
+* Check "npm install -g @getgauge/cli" exists
 
 Documentation
 -------------
