@@ -46,4 +46,9 @@
    |----|----------------|
    |$   |".image_overlay"|
 * Click "Compare"
+* Hover on element
+
+   |Type|Selector        |
+   |----|----------------|
+   |$   |".image_overlay"|
 * Click "Remove"
