@@ -28,9 +28,9 @@ tags: knownIssue
 * Click link "Blog"
 * Click image above 
 
-   |Type|Selector       |
-   |----|---------------|
-   |text|Zabil Maliackal|
+   |Type|Selector                                                     |
+   |----|-------------------------------------------------------------|
+   |text|Introducing Taiko - the last mile to reliable test automation|
 * Assert Exists 
 
    |Type    |Selector          |Method|
