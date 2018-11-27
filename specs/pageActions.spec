@@ -52,3 +52,12 @@
    |----|----------------|
    |$   |".image_overlay"|
 * Click "Remove"
+
+## Drag and drop
+* Navigate to "https://marcojakob.github.io/dart-dnd/basic/"
+* Drag ".document" and drop to ".trash"
+* Drag ".document" and drop at
+   |direction|pixel|
+   |---------|-----|
+   |right    |300  |
+   |bottom   |100  |
