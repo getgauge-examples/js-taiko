@@ -60,4 +60,4 @@
    |direction|pixel|
    |---------|-----|
    |right    |300  |
-   |bottom   |100  |
+   |down     |100  |
