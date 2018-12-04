@@ -43,3 +43,10 @@
    |Type|Selector          |
    |----|------------------|
    |$   |.component-display|
+
+## Reload should not clear local cache
+* Navigate to "http://todomvc.com/examples/react/#/"
+* Write "flow"
+* Press "Enter"
+* Reload the page
+* Assert text "flow" exists on the page.
