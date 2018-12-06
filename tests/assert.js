@@ -14,7 +14,7 @@ step("Assert title to be <userTitle>", async function(userTitle) {
 });
 
 step("Assert Exists <table>", async function(table){
-	assert.equal("Exists",(await _selectors.getElement(table).exists()).description);
+	assert.ok(await _selectors.getElement(table).exists());
 });
 
 step("assert text to be <text> <table>", async function(text, table) {
@@ -26,6 +26,5 @@ step("Assert text is not empty <table>", async function(table) {
 });
 
 step("Assert text <content> exists on the page.", async function(content) {
-	const rersult = await text(content).exists();
-	assert.equal(rersult.description, 'Exists');
+	assert.ok(await text(content).exists());
 });
