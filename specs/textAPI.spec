@@ -8,8 +8,7 @@
    |$   |.copy-to-clipboard|
 
 ## Should get text after ajax calls
-tags: knownIssue
-* Navigate to "https://alik0211.ru/pokedex/"
+* Navigate to "https://alik0211.github.io/pokedex/"
 * Assert text is not empty 
    |Type|Selector      |
    |----|--------------|
