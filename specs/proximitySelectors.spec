@@ -35,7 +35,7 @@ tags: knownIssue
 
    |Type    |Selector          |Method|
    |--------|------------------|------|
-   |contains|Introducing Taiko |exists|
+   |text    |Introducing Taiko |exists|
 
 ## Right Of
 

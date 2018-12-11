@@ -3,7 +3,7 @@ const assert = require('assert');
 const {
     browser, page, openBrowser, closeBrowser, goto, reload, $, link, listItem,
     inputField, fileField, textField, image, button, comboBox, checkBox, radioButton, alert,
-    prompt, confirm, beforeunload, text, contains, click, doubleClick, rightClick, write, press,
+    prompt, confirm, beforeunload, text, click, doubleClick, rightClick, write, press,
     attach, highlight, focus, scrollTo, scrollRight, scrollLeft, scrollUp, scrollDown,
     hover, screenshot, timeoutSecs, intervalSecs, waitForNavigation, to, into, dismiss, accept,intercept
 } = require('taiko');
@@ -33,11 +33,11 @@ step('Go to Gauge get started page', async() => await click('Get Started'));
 
 step("Click on Quick Install", async () => assert.ok(await click('Quick Install')));
 
-step("Check <heading> exists", async (heading) => assert.ok(await contains(heading).exists()));
+step("Check <heading> exists", async (heading) => assert.ok(await text(heading).exists()));
 
 step('Go to Gauge documentation page', async() => await click($(`//*[text()='Documentation']`)));
 
-step('Display quick start', async() => assert.ok(await contains('quick start').exists()));
+step('Display quick start', async() => assert.ok(await text('quick start').exists()));
 
 step('Go to plugins page', async() => {
     assert.ok(await link('Get Started').exists());
@@ -51,10 +51,10 @@ step('Go to plugins page', async() => {
 step('Display the language plugins', async() => {
     assert.ok(await text('Plugins').exists(intervalSecs(1), timeoutSecs(10)));
 
-    assert.ok(await contains('Java Runner').exists());
-    await highlight(contains('Java Runner'));
+    assert.ok(await text('Java Runner').exists());
+    await highlight(text('Java Runner'));
 
-    assert.ok(await contains('Ruby runner').exists());
+    assert.ok(await text('Ruby runner').exists());
 });
 
 step('Search for Hooks', async() => {

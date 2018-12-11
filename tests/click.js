@@ -3,7 +3,7 @@ const assert = require('assert');
 var _selectors = require('./selectors')
 
 const {
-    link, click,below,contains,image,above,toRightOf,toLeftOf,button,rightClick
+    link, click,below,image,above,toRightOf,toLeftOf,button,rightClick
 } = require('taiko');
 
 step("Click link <userlink> below <table>", async function (userlink,table) {
@@ -11,7 +11,7 @@ step("Click link <userlink> below <table>", async function (userlink,table) {
 });
 
 step("Click an element that contains <text>", async function (text) {
-    await click(contains(text));
+    await click(text);
 });
 
 step("Click link <userlink>", async function(userlink) {
