@@ -8,12 +8,12 @@ const {
 
 step("Select <value> of Combo Box near <table>", async function(value, table) {
     var element = _selectors.getElement(table);
-    assert.equal((await element.exists()).description,'Exists');
+    assert.ok((await element.exists()));
     await comboBox(near(element)).select("‪हिन्दी‬");
 });
 
 step("Select <value> of Combo Box to right of <table>", async function(value, table) {
     var element = _selectors.getElement(table);
-    assert.equal((await element.exists()).description,'Exists');
+    assert.ok((await element.exists()));
     await comboBox(toRightOf(element)).select("‪हिन्दी‬");
 });

@@ -7,7 +7,7 @@
 
    |Type|Selector       |
    |----|---------------|
-   |link|Gauge Commmands|
+   |link|Gauge Commands|
 
 ## Near by
 tags: knownIssue
