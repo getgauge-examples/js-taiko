@@ -42,7 +42,7 @@ step('Display quick start', async() => assert.ok(await text('quick start').exist
 step('Go to plugins page', async() => {
     assert.ok(await link('Get Started').exists());
     assert.ok(await link(text('Get Started')).exists());
-    assert.ok(await $(`//a[text()='Get Started']`).exists());
+    assert.ok(await $(`//a[contains(text(),'Get Started')]`).exists());
 
     await hover('Get Started');
     await click('Plugins');
