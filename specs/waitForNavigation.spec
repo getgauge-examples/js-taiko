@@ -1,5 +1,5 @@
-# Text
-## Should get the text of an element
+# Wait for navigation
+## Should get the text of an element after page is loaded
 * Navigate to "https://ahfarmer.github.io/emoji-search/"
 * length of parse int should be "20" 
 

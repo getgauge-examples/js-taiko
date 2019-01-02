@@ -1,5 +1,6 @@
 'use strict';
 const assert = require('assert');
+var _path = require('path');
 const {
     browser, page, openBrowser, closeBrowser, goto, reload, $, link, listItem,
     inputField, fileField, textField, image, button, comboBox, checkBox, radioButton, alert,
@@ -23,7 +24,10 @@ gauge.screenshotFn = async function () {
 
 afterScenario(async() => await closeBrowser());
 
-step('Navigate to <url>', async url => await goto(url));
+step('Navigate to <url>', async url => 
+{
+    await goto(url)
+});
 
 step('Navigate to <url> with timeout <timeout> ms', async (url,timeout) => await goto(url,{timeout:timeout}));
 
@@ -149,4 +153,9 @@ step("Respond to <url> with <respomnseBody>", async function(url, respomnseBody)
 
 step("Respond to <url> with json <jsonString>", async function(url, jsonString) {
 	await intercept(url, {body: JSON.parse(jsonString) })
+});
+
+step("Navigate to relative path <relativePath>", async function(relativePath) {
+    var absolutePath = _path.resolve(relativePath)
+    await goto("file:///"+absolutePath)
 });
