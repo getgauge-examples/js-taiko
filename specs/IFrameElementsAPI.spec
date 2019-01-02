@@ -16,7 +16,12 @@ Check Box
 Radio Button
 ------------
 
-* Radio Button
+* Radio Button "Female"
+
+Radio Button without for
+------------------------
+tags: knownIssue
+* Radio Button "Y"
 
 Attach file
 -----------

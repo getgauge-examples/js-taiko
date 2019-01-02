@@ -1,7 +1,7 @@
 API
 ===
 
-* Navigate to "https://getgauge-examples.github.io/js-taiko" with timeout "5000" ms
+* Navigate to relative path "./specs/data/HTMLElements.html"
 
 Combo Box
 ---------
@@ -16,7 +16,12 @@ Check Box
 Radio Button
 ------------
 
-* Radio Button
+* Radio Button "Female"
+
+Radio Button without for
+------------------------
+tags: knownIssue
+* Radio Button "Y"
 
 Attach file
 -----------

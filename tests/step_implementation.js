@@ -93,8 +93,8 @@ step('Check Box', async() => {
     assert.ok(await box.isChecked());
 });
 
-step('Radio Button', async() => {
-    const button = radioButton('Female');
+step("Radio Button <label>", async (label) => {
+    const button = radioButton(label);
     assert.ok(await button.exists());
     await button.select();
     assert.ok(await button.isSelected());
