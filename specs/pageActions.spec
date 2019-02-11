@@ -2,13 +2,13 @@
 ## Scroll To, Up
 
 * Navigate to "https://reactjs.org/community/examples.html"
-* Scroll to 
+* Scroll to
 
    |Type|Selector    |
    |----|------------|
    |link|Installation|
 
-* Scroll up 
+* Scroll up
 
    |Type|Selector  |
    |----|----------|
@@ -20,7 +20,7 @@
 * Write "flow"
 * Press "Enter"
 * Click link "Active"
-* Click checkBox with attribute "{\"class\":\"toggle\"}" near 
+* Click checkBox with attribute "{\"class\":\"toggle\"}" near
 
    |Type|Selector|
    |----|--------|
@@ -61,3 +61,12 @@
    |---------|-----|
    |right    |300  |
    |down     |100  |
+
+## Get current url
+* Navigate to "http://google.com"
+* Get current url of browser
+
+## Get cuttent url after redirecting
+* Navigate to "http://the-internet.herokuapp.com/"
+* Click "A/B Testing"
+* Validate part of current url "abtest" after redirecting
